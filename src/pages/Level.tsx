@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +12,58 @@ interface Exercise {
   difficulty: 'Easy' | 'Medium' | 'Hard';
   videoId: string; // YouTube video ID placeholder
 }
+
+const maestroExercises: Exercise[] = [
+  {
+    id: "1-1",
+    name: "Inside Foot U",
+    description: "Pull ball towards you using the sole of your foot, push ball across body with inside of the foot, push forward with opposite foot",
+    difficulty: "Easy",
+    videoId: "placeholder-1-1"
+  },
+  {
+    id: "1-2",
+    name: "Outside Foot U",
+    description: "Pull ball back towards you and then across your body with the outside of the foot. Repeat both sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-1-2"
+  },
+  {
+    id: "1-3",
+    name: "Inside Foot V Cut",
+    description: "Pull ball towards you with the sole diagonally and push in the opposite direction with the inside foot.",
+    difficulty: "Medium",
+    videoId: "placeholder-1-3"
+  },
+  {
+    id: "1-4",
+    name: "Outside Foot V Cut",
+    description: "Pull ball towards you diagonally, exchange feet and push the opposite way with the inside of the foot.",
+    difficulty: "Medium",
+    videoId: "placeholder-1-4"
+  },
+  {
+    id: "1-5",
+    name: "Alternate Foot V Cut",
+    description: "Pull ball towards you diagonally, exchange feet and push the opposite way with the inside of the foot.",
+    difficulty: "Medium",
+    videoId: "placeholder-1-5"
+  },
+  {
+    id: "1-6",
+    name: "L Drag U",
+    description: "Pull ball towards you and push behind standing leg with inside of the foot. Repeat both sides.",
+    difficulty: "Hard",
+    videoId: "placeholder-1-6"
+  },
+  {
+    id: "1-7",
+    name: "Sole Square",
+    description: "Draw a square around the cone using the soles of both feet.",
+    difficulty: "Hard",
+    videoId: "placeholder-1-7"
+  },
+];
 
 const Level = () => {
   const { levelId } = useParams();
@@ -30,6 +81,9 @@ const Level = () => {
   }, [levelId]);
 
   const generateExercises = (level: number): Exercise[] => {
+    if (level === 1) {
+      return maestroExercises;
+    }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
       { name: "Inside Touch", description: "Touch ball with inside of both feet alternately", difficulty: 'Easy' as const },

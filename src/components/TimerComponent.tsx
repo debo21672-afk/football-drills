@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,47 +19,43 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
   const audioRef = useRef<HTMLAudioElement>();
 
   // Create audio context and sounds
-  useEffect(() => {
-    // We'll use the Web Audio API to create simple beep sounds
-    // This is a placeholder for actual sound files
-    const createBeepSound = (frequency: number, duration: number) => {
-      try {
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator.frequency.value = frequency;
-        oscillator.type = 'square';
-        
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + duration);
-      } catch (error) {
-        console.log('Audio not supported');
-      }
-    };
+  const createBeepSound = (frequency: number, duration: number) => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = frequency;
+      oscillator.type = 'square';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + duration);
+    } catch (error) {
+      console.log('Audio not supported');
+    }
+  };
 
-    window.playCountdownSound = () => createBeepSound(800, 0.2);
-    window.playStartSound = () => createBeepSound(1000, 0.5);
-    window.playWarningSound = () => createBeepSound(600, 0.3);
-    window.playEndSound = () => createBeepSound(400, 1.0);
-  }, []);
+  const playCountdownSound = () => createBeepSound(800, 0.2);
+  const playStartSound = () => createBeepSound(1000, 0.5);
+  const playWarningSound = () => createBeepSound(600, 0.3);
+  const playEndSound = () => createBeepSound(400, 1.0);
 
   // Countdown timer
   useEffect(() => {
     if (phase === 'countdown' && countdown > 0) {
       const timer = setTimeout(() => {
         if (countdown === 1) {
-          (window as any).playStartSound?.();
+          playStartSound();
           setPhase('active');
           setTimeLeft(60);
         } else {
-          (window as any).playCountdownSound?.();
+          playCountdownSound();
           setCountdown(countdown - 1);
         }
       }, 1000);
@@ -77,12 +72,12 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
         
         // Warning sound for last 10 seconds
         if (newTimeLeft <= 10 && newTimeLeft > 0) {
-          (window as any).playWarningSound?.();
+          playWarningSound();
         }
         
         // End sound when timer finishes
         if (newTimeLeft === 0) {
-          (window as any).playEndSound?.();
+          playEndSound();
           setPhase('finished');
         }
       }, 1000);
@@ -93,7 +88,7 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
   const startTimer = () => {
     setPhase('countdown');
     setCountdown(3);
-    (window as any).playCountdownSound?.();
+    playCountdownSound();
   };
 
   const incrementReps = () => {
