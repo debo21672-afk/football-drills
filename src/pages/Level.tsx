@@ -13,6 +13,58 @@ interface Exercise {
   videoId: string; // YouTube video ID placeholder
 }
 
+const level2Exercises: Exercise[] = [
+  {
+    id: "2-1",
+    name: "Right Foot Weave",
+    description: "Weave in and out of the cones using the inside and outside of the right foot taking a touch every step.",
+    difficulty: "Easy",
+    videoId: "placeholder-2-1"
+  },
+  {
+    id: "2-2",
+    name: "Left Foot Weave",
+    description: "Weave in and out of the cones using the inside and outside of the left foot taking a touch every step.",
+    difficulty: "Easy",
+    videoId: "placeholder-2-2"
+  },
+  {
+    id: "2-3",
+    name: "Inside Foot Double U",
+    description: "Pull ball back with the sole of your foot, push ball across body with inside of the foot, push forward with opposite foot and repeat.",
+    difficulty: "Medium",
+    videoId: "placeholder-2-3"
+  },
+  {
+    id: "2-4",
+    name: "Outside Foot Double U",
+    description: "Pull ball back with the sole of your foot, push ball across body with outside of the foot, push forward with inside foot and repeat.",
+    difficulty: "Medium",
+    videoId: "placeholder-2-4"
+  },
+  {
+    id: "2-5",
+    name: "L Drag Double U",
+    description: "Pull ball back and push behind standing leg with inside of foot then forward with inside of opposite foot and repeat.",
+    difficulty: "Hard",
+    videoId: "placeholder-2-5"
+  },
+  {
+    id: "2-6",
+    name: "Sideways Infinity",
+    description: "Draw an infinity symbol (figure of 8) around the cones using the inside and sole of both feet.",
+    difficulty: "Hard",
+    videoId: "placeholder-2-6"
+  },
+  {
+    id: "2-7",
+    name: "Alternating V Cuts",
+    description: "Perform an Inside Foot V cut, exchange feet and immediately perform Alternate V Cut.",
+    difficulty: "Hard",
+    videoId: "placeholder-2-7"
+  },
+];
+
 const maestroExercises: Exercise[] = [
   {
     id: "1-1",
@@ -83,6 +135,9 @@ const Level = () => {
   const generateExercises = (level: number): Exercise[] => {
     if (level === 1) {
       return maestroExercises;
+    }
+    if (level === 2) {
+      return level2Exercises;
     }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
