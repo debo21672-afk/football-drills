@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +5,7 @@ import { Timer, X } from "lucide-react";
 import { TimerControls } from './TimerControls';
 import { TimerDisplay } from './TimerDisplay';
 import { ScoreInput } from './ScoreInput';
+import { CameraRecording } from './CameraRecording';
 import { playCountdownSound, playStartSound, playWarningSound, playEndSound } from './TimerSounds';
 
 interface TimerComponentProps {
@@ -20,6 +20,7 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
   const [timeLeft, setTimeLeft] = useState(60);
   const [manualScore, setManualScore] = useState('');
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const hasCompleted = useRef(false);
 
   // Countdown timer
@@ -101,6 +102,14 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Camera Recording Section */}
+          <CameraRecording
+            isRecording={isRecording}
+            onStartRecording={() => setIsRecording(true)}
+            onStopRecording={() => setIsRecording(false)}
+            timerPhase={phase}
+          />
+
           {phase === 'ready' && <TimerControls onStartTimer={startTimer} />}
           
           {(phase === 'countdown' || phase === 'active') && (
