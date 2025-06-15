@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -57,6 +56,28 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Instructions */}
+        <div className="mb-12 bg-white rounded-lg p-6 shadow-md">
+          <h2 className="text-2xl font-bold mb-4 text-center">How to Play</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div>
+              <div className="text-4xl mb-2">📹</div>
+              <h3 className="font-semibold mb-2">Watch & Learn</h3>
+              <p className="text-gray-600">Watch the exercise video to learn the proper technique</p>
+            </div>
+            <div>
+              <div className="text-4xl mb-2">⏱️</div>
+              <h3 className="font-semibold mb-2">Test Mode</h3>
+              <p className="text-gray-600">Take the 1-minute challenge to see how many reps you can do</p>
+            </div>
+            <div>
+              <div className="text-4xl mb-2">🏆</div>
+              <h3 className="font-semibold mb-2">Track Progress</h3>
+              <p className="text-gray-600">Record your scores and watch yourself improve!</p>
+            </div>
+          </div>
+        </div>
+
         {/* Levels Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {levels.map((level) => {
@@ -101,28 +122,6 @@ const Index = () => {
               </Link>
             );
           })}
-        </div>
-
-        {/* Instructions */}
-        <div className="mt-12 bg-white rounded-lg p-6 shadow-md">
-          <h2 className="text-2xl font-bold mb-4 text-center">How to Play</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div>
-              <div className="text-4xl mb-2">📹</div>
-              <h3 className="font-semibold mb-2">Watch & Learn</h3>
-              <p className="text-gray-600">Watch the exercise video to learn the proper technique</p>
-            </div>
-            <div>
-              <div className="text-4xl mb-2">⏱️</div>
-              <h3 className="font-semibold mb-2">Test Mode</h3>
-              <p className="text-gray-600">Take the 1-minute challenge to see how many reps you can do</p>
-            </div>
-            <div>
-              <div className="text-4xl mb-2">🏆</div>
-              <h3 className="font-semibold mb-2">Track Progress</h3>
-              <p className="text-gray-600">Record your scores and watch yourself improve!</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
