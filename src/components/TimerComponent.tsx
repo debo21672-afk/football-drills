@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +16,8 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
   const [countdown, setCountdown] = useState(3);
   const [timeLeft, setTimeLeft] = useState(60);
   const [reps, setReps] = useState(0);
+  const [manualScore, setManualScore] = useState('');
+  const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const hasCompleted = useRef(false);
 
   // Create audio context and sounds
@@ -86,35 +87,40 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
     }
   }, [phase, timeLeft]);
 
-  // Automatically submit score on finish
   useEffect(() => {
-    if (phase === 'finished' && !hasCompleted.current) {
-      hasCompleted.current = true;
-      onComplete(reps);
+    if (phase === 'finished') {
+      hasCompleted.current = false; // user must now submit their score manually
     }
-  }, [phase, reps, onComplete]);
+  }, [phase]);
 
   const startTimer = () => {
     setPhase('countdown');
     setCountdown(3);
     playCountdownSound();
-    hasCompleted.current = false; // reset when new challenge starts
+    hasCompleted.current = false; // reset for new challenge
     setReps(0);
     setTimeLeft(60);
+    setManualScore('');
+    setScoreSubmitted(false);
   };
 
-  const incrementReps = () => {
-    setReps(reps + 1);
+  const incrementReps = () => setReps(reps + 1);
+  const decrementReps = () => { if (reps > 0) setReps(reps - 1); };
+  const formatTime = (seconds: number) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
+
+  const handleScoreInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/, ''); // Only numbers
+    setManualScore(value);
   };
 
-  const decrementReps = () => {
-    if (reps > 0) {
-      setReps(reps - 1);
+  const handleScoreSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualScore || Number(manualScore) <= 0) return;
+    setScoreSubmitted(true);
+    if (!hasCompleted.current) {
+      hasCompleted.current = true;
+      onComplete(Number(manualScore));
     }
-  };
-
-  const formatTime = (seconds: number) => {
-    return `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
   };
 
   return (
@@ -164,21 +170,9 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
                 </div>
                 <p className="text-lg text-gray-600">Time Remaining</p>
               </div>
-
-              <div className="text-center space-y-4">
-                <Label className="text-lg">Count Your Reps</Label>
-                <div className="flex items-center justify-center gap-4">
-                  <Button size="icon" onClick={decrementReps} variant="outline">
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                  <div className="text-4xl font-bold bg-gray-100 px-6 py-2 rounded-lg min-w-[100px]">
-                    {reps}
-                  </div>
-                  <Button size="icon" onClick={incrementReps}>
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-                <p className="text-sm text-gray-500">Tap + for each rep you complete</p>
+              {/* Remove rep display and buttons from active phase, user will enter score manually after timer */}
+              <div className="text-center space-y-4 text-base italic text-gray-500">
+                Enter your score after the timer ends!
               </div>
             </div>
           )}
@@ -187,13 +181,37 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
             <div className="text-center space-y-4">
               <div className="text-6xl">🎉</div>
               <h2 className="text-2xl font-bold">Time's Up!</h2>
-              <div className="bg-blue-50 rounded-lg p-4">
-                <p className="text-lg text-gray-600">You completed</p>
-                <div className="text-4xl font-bold text-blue-600">{reps}</div>
-                <p className="text-lg text-gray-600">reps!</p>
-              </div>
-              {/* Action buttons are removed; the score is auto-saved */}
-              <p className="text-gray-500 text-sm italic">Your score was automatically saved.</p>
+              {!scoreSubmitted ? (
+                <form onSubmit={handleScoreSubmit} className="max-w-xs mx-auto space-y-4">
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <Label htmlFor="score-input" className="block mb-2 text-lg text-gray-700">Enter your score</Label>
+                    <Input
+                      id="score-input"
+                      type="number"
+                      min={1}
+                      max={9999}
+                      inputMode="numeric"
+                      value={manualScore}
+                      onChange={handleScoreInput}
+                      className="w-full text-center text-xl"
+                      autoFocus
+                      disabled={scoreSubmitted}
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={!manualScore || Number(manualScore) <= 0 || scoreSubmitted}>
+                    Save Score
+                  </Button>
+                </form>
+              ) : (
+                <div>
+                  <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                    <p className="text-lg text-gray-600">You entered</p>
+                    <div className="text-4xl font-bold text-blue-600">{manualScore}</div>
+                    <p className="text-lg text-gray-600">reps!</p>
+                  </div>
+                  <p className="text-gray-500 text-sm italic">Your score was saved.</p>
+                </div>
+              )}
             </div>
           )}
         </CardContent>
