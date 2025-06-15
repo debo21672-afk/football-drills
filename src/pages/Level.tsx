@@ -325,6 +325,58 @@ const level6Exercises: Exercise[] = [
   },
 ];
 
+const level7Exercises: Exercise[] = [
+  {
+    id: "7-1",
+    name: "Inside Foot Wheel",
+    description: "Pull ball back with the sole and across with the inside of the foot then push forward with the opposite foot and repeat around entire circle.",
+    difficulty: "Easy",
+    videoId: "placeholder-7-1"
+  },
+  {
+    id: "7-2",
+    name: "Outside Foot Wheel",
+    description: "Pull ball back with the sole and across with the outside of the foot then push forward with the same foot and repeat around entire circle.",
+    difficulty: "Easy",
+    videoId: "placeholder-7-2"
+  },
+  {
+    id: "7-3",
+    name: "Single Leg Sole Wheel",
+    description: "Roll the ball inside and outside of the circle around the cones using the sole of the foot.",
+    difficulty: "Easy",
+    videoId: "placeholder-7-3"
+  },
+  {
+    id: "7-4",
+    name: "Two Foot Wheel",
+    description: "Roll the ball inside and outside of the circle around the cones using the inside and sole of both feet.",
+    difficulty: "Easy",
+    videoId: "placeholder-7-4"
+  },
+  {
+    id: "7-5",
+    name: "Right Foot Weave",
+    description: "Weave in and out of the cones around the circle using the inside and outside of your right foot.",
+    difficulty: "Easy",
+    videoId: "placeholder-7-5"
+  },
+  {
+    id: "7-6",
+    name: "Left Foot Weave",
+    description: "Weave in and out of the cones around the circle using the inside and outside of your left foot.",
+    difficulty: "Easy",
+    videoId: "placeholder-7-6"
+  },
+  {
+    id: "7-7",
+    name: "Two Foot Weave",
+    description: "Weave in and out of the cones around the circle using all areas of both feet.",
+    difficulty: "Easy",
+    videoId: "placeholder-7-7"
+  },
+];
+
 const Level = () => {
   const { levelId } = useParams();
   const [bestScores, setBestScores] = useState<{ [exerciseId: string]: number }>({});
@@ -358,6 +410,9 @@ const Level = () => {
     }
     if (level === 6) {
       return level6Exercises;
+    }
+    if (level === 7) {
+      return level7Exercises;
     }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
