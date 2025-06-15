@@ -169,6 +169,58 @@ const level3Exercises: Exercise[] = [
   }
 ];
 
+const level4Exercises: Exercise[] = [
+  {
+    id: "4-1",
+    name: "Triple Push Pull",
+    description: "Push ball with the laces and pull back with the sole to the inside, forwards and then outside.",
+    difficulty: "Easy",
+    videoId: "placeholder-4-1"
+  },
+  {
+    id: "4-2",
+    name: "Double V Cut Sole Roll",
+    description: "Perform a double Inside Foot V Cut and Sole Roll the ball in front of the base cones of the triangle.",
+    difficulty: "Easy",
+    videoId: "placeholder-4-2"
+  },
+  {
+    id: "4-3",
+    name: "Pyramids",
+    description: "Sole Roll the ball behind the base cones of the triangle, push forward and work your way up and back down the triangle.",
+    difficulty: "Easy",
+    videoId: "placeholder-4-3"
+  },
+  {
+    id: "4-4",
+    name: "Right Foot Weave",
+    description: "Weave around the course going around each of the cones using the inside and outside of your right foot.",
+    difficulty: "Easy",
+    videoId: "placeholder-4-4"
+  },
+  {
+    id: "4-5",
+    name: "Left Foot Weave",
+    description: "Weave around the course going around each of the cones using the inside and outside of your left foot.",
+    difficulty: "Easy",
+    videoId: "placeholder-4-5"
+  },
+  {
+    id: "4-6",
+    name: "Sole Weave",
+    description: "Weave around the course going around each of the cones using the sole of both feet.",
+    difficulty: "Easy",
+    videoId: "placeholder-4-6"
+  },
+  {
+    id: "4-7",
+    name: "Inside Outside Weave",
+    description: "Weave around the course going around each of the cones using the inside and outside of both feet.",
+    difficulty: "Easy",
+    videoId: "placeholder-4-7"
+  }
+];
+
 const Level = () => {
   const { levelId } = useParams();
   const [bestScores, setBestScores] = useState<{ [exerciseId: string]: number }>({});
@@ -193,6 +245,9 @@ const Level = () => {
     }
     if (level === 3) {
       return level3Exercises;
+    }
+    if (level === 4) {
+      return level4Exercises;
     }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
