@@ -117,6 +117,58 @@ const maestroExercises: Exercise[] = [
   },
 ];
 
+const level3Exercises: Exercise[] = [
+  {
+    id: "3-1",
+    name: "Sole Rolls",
+    description: "Roll the ball between the cones from one foot to the other using the sole of the foot.",
+    difficulty: "Easy",
+    videoId: "placeholder-3-1"
+  },
+  {
+    id: "3-2",
+    name: "Nutmegs",
+    description: "Pull ball towards back and push through the cones using the outside of the foot. Repeat both sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-3-2"
+  },
+  {
+    id: "3-3",
+    name: "Upside Down U",
+    description: "Push ball forward with inside of the foot, sole roll through the cones and pull back with the sole.",
+    difficulty: "Medium",
+    videoId: "placeholder-3-3"
+  },
+  {
+    id: "3-4",
+    name: "Forwards Infinity",
+    description: "Draw an Infinity symbol (figure of 8) with the ball around the cones with the sole and inside of both feet.",
+    difficulty: "Medium",
+    videoId: "placeholder-3-4"
+  },
+  {
+    id: "3-5",
+    name: "V Cut Triangle",
+    description: "Perform an Inside Foot V Cut and Sole Roll the ball through the cones and repeat.",
+    difficulty: "Medium",
+    videoId: "placeholder-3-5"
+  },
+  {
+    id: "3-6",
+    name: "L Drag Triangle",
+    description: "Perform the L Drag and double Sole Roll the ball through the cones to repeat on opposite foot.",
+    difficulty: "Hard",
+    videoId: "placeholder-3-6"
+  },
+  {
+    id: "3-7",
+    name: "L Drag V Cut Triangle",
+    description: "Perform the L Drag followed by the Alternate V Cut and Sole Roll the ball through the cones.",
+    difficulty: "Hard",
+    videoId: "placeholder-3-7"
+  }
+];
+
 const Level = () => {
   const { levelId } = useParams();
   const [bestScores, setBestScores] = useState<{ [exerciseId: string]: number }>({});
@@ -139,6 +191,9 @@ const Level = () => {
     if (level === 2) {
       return level2Exercises;
     }
+    if (level === 3) {
+      return level3Exercises;
+    }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
       { name: "Inside Touch", description: "Touch ball with inside of both feet alternately", difficulty: 'Easy' as const },
@@ -154,7 +209,7 @@ const Level = () => {
     return baseExercises.slice(0, exerciseCount).map((exercise, index) => ({
       ...exercise,
       id: `${level}-${index + 1}`,
-      videoId: `placeholder-${level}-${index + 1}` // Placeholder for YouTube video ID
+      videoId: `placeholder-${level}-${index + 1}`
     }));
   };
 
