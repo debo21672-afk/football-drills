@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -9,6 +8,13 @@ import { ExerciseControls } from '@/components/ExerciseControls';
 import { toast } from "@/hooks/use-toast";
 
 const exerciseVideos: { [key: string]: string } = {
+  "1-1": "6wZurRCJIXo",
+  "1-2": "jOZ5hivPMwE", 
+  "1-3": "paeIZJNfIw8",
+  "1-4": "TnK6aXlbx9c",
+  "1-5": "AsHdDDaCM3M",
+  "1-6": "UrNuQx9Oslw",
+  "1-7": "6X9dqpmaFw0",
   "8-1": "pZ8iGPw3c0Y",
   "8-2": "VMnDtnJJSMI",
   "8-3": "OsxLeSU_8gs",
