@@ -120,66 +120,63 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card className="border-2 border-blue-500">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <Timer className="w-6 h-6" />
-              {exerciseName} - Timer Challenge
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Timer className="w-5 h-5" />
+              {exerciseName} - Timer
             </CardTitle>
             <Button variant="outline" size="icon" onClick={onCancel}>
               <X className="w-4 h-4" />
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4">
           {phase === 'ready' && (
-            <div className="text-center space-y-4">
-              <div className="text-6xl">⚽</div>
-              <h2 className="text-2xl font-bold">Ready to start?</h2>
-              <p className="text-gray-600">You'll have 1 minute to do as many reps as possible!</p>
-              <p className="text-sm text-gray-500">
-                There will be a 3-second countdown before the timer starts.
-              </p>
-              <Button size="lg" onClick={startTimer} className="text-lg px-8 py-3">
-                <Timer className="w-5 h-5 mr-2" />
+            <div className="text-center space-y-3">
+              <div className="text-4xl">⚽</div>
+              <h2 className="text-xl font-bold">Ready to start?</h2>
+              <p className="text-gray-600 text-sm">1 minute to do as many reps as possible!</p>
+              <Button size="lg" onClick={startTimer} className="px-6 py-2">
+                <Timer className="w-4 h-4 mr-2" />
                 Start Challenge
               </Button>
             </div>
           )}
 
           {phase === 'countdown' && (
-            <div className="text-center space-y-4">
-              <div className="text-8xl font-bold text-blue-600 animate-pulse">
+            <div className="text-center space-y-3">
+              <div className="text-6xl font-bold text-blue-600 animate-pulse">
                 {countdown}
               </div>
-              <h2 className="text-xl font-semibold">Get Ready!</h2>
+              <h2 className="text-lg font-semibold">Get Ready!</h2>
             </div>
           )}
 
           {phase === 'active' && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="text-center">
-                <div className={`text-6xl font-bold ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-blue-600'}`}>
+                <div className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-blue-600'}`}>
                   {formatTime(timeLeft)}
                 </div>
-                <p className="text-lg text-gray-600">Time Remaining</p>
+                <p className="text-sm text-gray-600">Time Remaining</p>
               </div>
-              <div className="text-center space-y-4 text-base italic text-gray-500">
+              <div className="text-center text-sm italic text-gray-500">
                 Enter your score after the timer ends!
               </div>
             </div>
           )}
 
           {phase === 'finished' && (
-            <div className="text-center space-y-4">
-              <div className="text-6xl">🎉</div>
-              <h2 className="text-2xl font-bold">Time's Up!</h2>
+            <div className="text-center space-y-3">
+              <div className="text-4xl">🎉</div>
+              <h2 className="text-xl font-bold">Time's Up!</h2>
               {!scoreSubmitted ? (
-                <form onSubmit={handleScoreSubmit} className="max-w-xs mx-auto space-y-4">
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <Label htmlFor="score-input" className="block mb-2 text-lg text-gray-700">Enter your score</Label>
+                <form onSubmit={handleScoreSubmit} className="max-w-xs mx-auto space-y-3">
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <Label htmlFor="score-input" className="block mb-2 text-sm text-gray-700">Enter your score</Label>
                     <Input
                       id="score-input"
                       type="number"
@@ -188,7 +185,7 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
                       inputMode="numeric"
                       value={manualScore}
                       onChange={handleScoreInput}
-                      className="w-full text-center text-xl"
+                      className="w-full text-center text-lg"
                       autoFocus
                       disabled={scoreSubmitted}
                     />
@@ -199,12 +196,12 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
                 </form>
               ) : (
                 <div>
-                  <div className="bg-blue-50 rounded-lg p-4 mb-4">
-                    <p className="text-lg text-gray-600">You entered</p>
-                    <div className="text-4xl font-bold text-blue-600">{manualScore}</div>
-                    <p className="text-lg text-gray-600">reps!</p>
+                  <div className="bg-blue-50 rounded-lg p-3 mb-3">
+                    <p className="text-sm text-gray-600">You entered</p>
+                    <div className="text-2xl font-bold text-blue-600">{manualScore}</div>
+                    <p className="text-sm text-gray-600">reps!</p>
                   </div>
-                  <p className="text-gray-500 text-sm italic">Your score was saved.</p>
+                  <p className="text-gray-500 text-xs italic">Your score was saved.</p>
                 </div>
               )}
             </div>

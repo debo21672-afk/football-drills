@@ -242,7 +242,7 @@ const Exercise = () => {
 
         {/* Timer Modal */}
         <Dialog open={isTestMode} onOpenChange={setIsTestMode}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-md w-full mx-auto mt-8 mb-auto max-h-[60vh] overflow-y-auto">
             <TimerComponent
               onComplete={handleTimerComplete}
               onCancel={() => setIsTestMode(false)}
