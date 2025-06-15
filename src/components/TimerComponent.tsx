@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Timer, Plus, Minus, X } from "lucide-react";
+import { Timer, X } from "lucide-react";
 
 interface TimerComponentProps {
   onComplete: (reps: number) => void;
@@ -15,7 +15,6 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
   const [phase, setPhase] = useState<'ready' | 'countdown' | 'active' | 'finished'>('ready');
   const [countdown, setCountdown] = useState(3);
   const [timeLeft, setTimeLeft] = useState(60);
-  const [reps, setReps] = useState(0);
   const [manualScore, setManualScore] = useState('');
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const hasCompleted = useRef(false);
@@ -98,14 +97,11 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
     setCountdown(3);
     playCountdownSound();
     hasCompleted.current = false; // reset for new challenge
-    setReps(0);
     setTimeLeft(60);
     setManualScore('');
     setScoreSubmitted(false);
   };
 
-  const incrementReps = () => setReps(reps + 1);
-  const decrementReps = () => { if (reps > 0) setReps(reps - 1); };
   const formatTime = (seconds: number) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
 
   const handleScoreInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,7 +166,6 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
                 </div>
                 <p className="text-lg text-gray-600">Time Remaining</p>
               </div>
-              {/* Remove rep display and buttons from active phase, user will enter score manually after timer */}
               <div className="text-center space-y-4 text-base italic text-gray-500">
                 Enter your score after the timer ends!
               </div>
