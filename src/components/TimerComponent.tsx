@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +17,7 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
   const [countdown, setCountdown] = useState(3);
   const [timeLeft, setTimeLeft] = useState(60);
   const [reps, setReps] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>();
+  const hasCompleted = useRef(false);
 
   // Create audio context and sounds
   const createBeepSound = (frequency: number, duration: number) => {
@@ -85,10 +86,21 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
     }
   }, [phase, timeLeft]);
 
+  // Automatically submit score on finish
+  useEffect(() => {
+    if (phase === 'finished' && !hasCompleted.current) {
+      hasCompleted.current = true;
+      onComplete(reps);
+    }
+  }, [phase, reps, onComplete]);
+
   const startTimer = () => {
     setPhase('countdown');
     setCountdown(3);
     playCountdownSound();
+    hasCompleted.current = false; // reset when new challenge starts
+    setReps(0);
+    setTimeLeft(60);
   };
 
   const incrementReps = () => {
@@ -99,10 +111,6 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
     if (reps > 0) {
       setReps(reps - 1);
     }
-  };
-
-  const handleComplete = () => {
-    onComplete(reps);
   };
 
   const formatTime = (seconds: number) => {
@@ -184,14 +192,8 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName }: TimerComp
                 <div className="text-4xl font-bold text-blue-600">{reps}</div>
                 <p className="text-lg text-gray-600">reps!</p>
               </div>
-              <div className="flex gap-3 justify-center">
-                <Button variant="outline" onClick={onCancel}>
-                  Try Again
-                </Button>
-                <Button onClick={handleComplete} size="lg">
-                  Save Score
-                </Button>
-              </div>
+              {/* Action buttons are removed; the score is auto-saved */}
+              <p className="text-gray-500 text-sm italic">Your score was automatically saved.</p>
             </div>
           )}
         </CardContent>
