@@ -383,49 +383,49 @@ const level8Exercises: Exercise[] = [
     name: "Inside Out",
     description: "Move the ball from inside to outside of the foot to improve lateral quickness and ball control.",
     difficulty: "Medium",
-    videoId: "placeholder-8-1"
+    videoId: "pZ8iGPw3c0Y"
   },
   {
     id: "8-2",
     name: "Sole Outside (V)",
     description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
     difficulty: "Medium",
-    videoId: "placeholder-8-2"
+    videoId: "VMnDtnJJSMI"
   },
   {
     id: "8-3",
     name: "Inside Inside",
     description: "Alternate touches with the inside of both feet, focusing on close control.",
     difficulty: "Medium",
-    videoId: "placeholder-8-3"
+    videoId: "OsxLeSU_8gs"
   },
   {
     id: "8-4",
     name: "Roll Inside",
     description: "Roll the ball with the sole and tap inside to train foot dexterity.",
     difficulty: "Medium",
-    videoId: "placeholder-8-4"
+    videoId: "ycIuocLGlAc"
   },
   {
     id: "8-5",
     name: "Single Sole Outside",
     description: "Use only one foot’s sole to roll and then push outside, isolating control to one side.",
     difficulty: "Medium",
-    videoId: "placeholder-8-5"
+    videoId: "Ui-kIJ8pMys"
   },
   {
     id: "8-6",
     name: "Single Slide",
     description: "Slide the ball sideways using one foot, keeping the ball under close control.",
     difficulty: "Hard",
-    videoId: "placeholder-8-6"
+    videoId: "oGNnlzIYP-Q"
   },
   {
     id: "8-7",
     name: "Single Foot Roll Outside",
     description: "Roll the ball then push outside with the same foot, combining rolling and lateral movement.",
     difficulty: "Hard",
-    videoId: "placeholder-8-7"
+    videoId: "PLZOyRwBth8"
   }
 ];
 
@@ -551,8 +551,22 @@ const Level = () => {
                   </div>
                   <CardTitle className="text-lg">{exercise.name}</CardTitle>
                   <p className="text-sm text-gray-600">{exercise.description}</p>
+                  {/* Only embed video in Level 8 */}
+                  {levelNum === 8 && (
+                    <div className="mt-3">
+                      <div className="aspect-video rounded border border-gray-300 overflow-hidden bg-black">
+                        <iframe
+                          title={`Exercise ${exercise.id} video`}
+                          src={`https://www.youtube.com/embed/${exercise.videoId}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-full"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </CardHeader>
-                
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
