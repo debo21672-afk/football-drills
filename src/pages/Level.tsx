@@ -221,6 +221,58 @@ const level4Exercises: Exercise[] = [
   }
 ];
 
+const level5Exercises: Exercise[] = [
+  {
+    id: "5-1",
+    name: "Cross Soles",
+    description: "Facing forwards, roll ball to each side of the square and back to the centre using the sole of the foot.",
+    difficulty: "Easy",
+    videoId: "placeholder-5-1"
+  },
+  {
+    id: "5-2",
+    name: "Oblongs",
+    description: "Draw an oblong shape with the ball around the 2 base cones using the inside and sole of both feet.",
+    difficulty: "Easy",
+    videoId: "placeholder-5-2"
+  },
+  {
+    id: "5-3",
+    name: "Forwards Backwards Soles",
+    description: "Roll the ball forwards and backwards up the sides and down the middle of the square using the sole.",
+    difficulty: "Easy",
+    videoId: "placeholder-5-3"
+  },
+  {
+    id: "5-4",
+    name: "Single Leg Sole Maze",
+    description: "Roll the ball forwards, outside, forwards inside, backwards, outside, backwards with the sole. Repeat both sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-5-4"
+  },
+  {
+    id: "5-5",
+    name: "Parallels",
+    description: "Sole roll the ball behind the base cones, roll ball forwards then repeat all the way up to the front of the square and back to the start.",
+    difficulty: "Easy",
+    videoId: "placeholder-5-5"
+  },
+  {
+    id: "5-6",
+    name: "Two Feet Maze",
+    description: "Using both feet, roll the ball forwards, outside, forwards inside, backwards, outside, backwards with the sole. Repeat both sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-5-6"
+  },
+  {
+    id: "5-7",
+    name: "Matrix",
+    description: "Using the sole and inside of both feet, draw a square around all four corner cones with the ball.",
+    difficulty: "Easy",
+    videoId: "placeholder-5-7"
+  },
+];
+
 const Level = () => {
   const { levelId } = useParams();
   const [bestScores, setBestScores] = useState<{ [exerciseId: string]: number }>({});
@@ -248,6 +300,9 @@ const Level = () => {
     }
     if (level === 4) {
       return level4Exercises;
+    }
+    if (level === 5) {
+      return level5Exercises;
     }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
