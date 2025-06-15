@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TimerComponent } from '@/components/TimerComponent';
 import { ExerciseHeader } from '@/components/ExerciseHeader';
 import { ExerciseVideo } from '@/components/ExerciseVideo';
@@ -131,22 +130,20 @@ const Exercise = () => {
             exerciseVideos={exerciseVideos}
           />
 
-          <ExerciseControls
-            onStartTimer={() => setIsTestMode(true)}
-            onSaveManualScore={saveScore}
-          />
-        </div>
-
-        {/* Timer Modal */}
-        <Dialog open={isTestMode} onOpenChange={setIsTestMode}>
-          <DialogContent className="max-w-sm w-full mx-auto fixed top-4 right-4 left-auto translate-x-0 translate-y-0 max-h-[90vh] overflow-y-auto bg-white/95 backdrop-blur-sm border-2 shadow-xl">
+          {/* Show Timer or Controls based on test mode */}
+          {isTestMode ? (
             <TimerComponent
               onComplete={handleTimerComplete}
               onCancel={() => setIsTestMode(false)}
               exerciseName={exerciseInfo.name}
             />
-          </DialogContent>
-        </Dialog>
+          ) : (
+            <ExerciseControls
+              onStartTimer={() => setIsTestMode(true)}
+              onSaveManualScore={saveScore}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
