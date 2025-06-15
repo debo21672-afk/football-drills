@@ -273,6 +273,58 @@ const level5Exercises: Exercise[] = [
   },
 ];
 
+const level6Exercises: Exercise[] = [
+  {
+    id: "6-1",
+    name: "Inside Foot Quarter Turn",
+    description: "Pull ball towards the middle of the square and push 90 degrees with the inside of the same foot around all four sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-6-1"
+  },
+  {
+    id: "6-2",
+    name: "Outside Foot Quarter Turn",
+    description: "Pull ball towards the middle of the square and push 90 degrees with the outside of the same foot around all four sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-6-2"
+  },
+  {
+    id: "6-3",
+    name: "Alternating Feet Quarter Turn",
+    description: "Pull ball towards the middle of the square and push 90 degrees with the inside of the opposite foot around all four sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-6-3"
+  },
+  {
+    id: "6-4",
+    name: "L Drag Quarter Turn",
+    description: "Pull ball towards the middle of the square and push 90 degrees behind the standing leg with the inside of the same foot around all four sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-6-4"
+  },
+  {
+    id: "6-5",
+    name: "Reverse L Drag Quarter Turn",
+    description: "Pull ball down the outside of the standing leg and push 90 degrees with the inside of the same foot around all four sides.",
+    difficulty: "Easy",
+    videoId: "placeholder-6-5"
+  },
+  {
+    id: "6-6",
+    name: "Outer Square Sole",
+    description: "Using the sole of both feet, roll the ball around the outside of the square forwards and laterally keeping as close to the cones as possible.",
+    difficulty: "Easy",
+    videoId: "placeholder-6-6"
+  },
+  {
+    id: "6-7",
+    name: "Samba",
+    description: "Sole roll ball to the middle of the square, inside stepover, outside stepover, continue sole roll across and repeat in the opposite direction.",
+    difficulty: "Easy",
+    videoId: "placeholder-6-7"
+  },
+];
+
 const Level = () => {
   const { levelId } = useParams();
   const [bestScores, setBestScores] = useState<{ [exerciseId: string]: number }>({});
@@ -303,6 +355,9 @@ const Level = () => {
     }
     if (level === 5) {
       return level5Exercises;
+    }
+    if (level === 6) {
+      return level6Exercises;
     }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
