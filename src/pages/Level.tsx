@@ -429,6 +429,58 @@ const level8Exercises: Exercise[] = [
   }
 ];
 
+const level9Exercises: Exercise[] = [
+  {
+    id: "9-1",
+    name: "Inside Out",
+    description: "Move the ball from inside to outside of the foot to improve lateral quickness and ball control.",
+    difficulty: "Medium",
+    videoId: "placeholder-9-1"
+  },
+  {
+    id: "9-2",
+    name: "Roll Inside",
+    description: "Roll the ball with the sole and tap inside to train foot dexterity and close control.",
+    difficulty: "Medium",
+    videoId: "placeholder-9-2"
+  },
+  {
+    id: "9-3",
+    name: "Sole Outside (V)",
+    description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
+    difficulty: "Medium",
+    videoId: "placeholder-9-3"
+  },
+  {
+    id: "9-4",
+    name: "Inside Inside",
+    description: "Alternate touches with the inside of both feet, focusing on close control and rhythm.",
+    difficulty: "Easy",
+    videoId: "placeholder-9-4"
+  },
+  {
+    id: "9-5",
+    name: "Slide (Chop Inside)",
+    description: "Quick lateral movement with the inside of the foot, chopping the ball to change direction.",
+    difficulty: "Hard",
+    videoId: "placeholder-9-5"
+  },
+  {
+    id: "9-6",
+    name: "Single Sole Role (V)",
+    description: "Roll the ball with the sole in a V pattern using only one foot for enhanced control.",
+    difficulty: "Hard",
+    videoId: "placeholder-9-6"
+  },
+  {
+    id: "9-7",
+    name: "Sole-Sole Outside",
+    description: "Combine sole touches with outside foot movements for advanced ball manipulation.",
+    difficulty: "Hard",
+    videoId: "placeholder-9-7"
+  }
+];
+
 const Level = () => {
   const { levelId } = useParams();
   const [bestScores, setBestScores] = useState<{ [exerciseId: string]: number }>({});
@@ -468,6 +520,9 @@ const Level = () => {
     }
     if (level === 8) {
       return level8Exercises;
+    }
+    if (level === 9) {
+      return level9Exercises;
     }
     const baseExercises = [
       { name: "Toe Taps", description: "Quick toe touches on top of the ball", difficulty: 'Easy' as const },
