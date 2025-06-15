@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,16 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, Play, Timer, Trophy, Save } from "lucide-react";
 import { TimerComponent } from '@/components/TimerComponent';
 import { toast } from "@/hooks/use-toast";
+
+const exerciseVideos: { [key: string]: string } = {
+  "8-1": "pZ8iGPw3c0Y",
+  "8-2": "VMnDtnJJSMI",
+  "8-3": "OsxLeSU_8gs",
+  "8-4": "ycIuocLGlAc",
+  "8-5": "Ui-kIJ8pMys",
+  "8-6": "oGNnlzIYP-Q",
+  "8-7": "PLZOyRwBth8",
+};
 
 const Exercise = () => {
   const { exerciseId } = useParams();
@@ -147,13 +156,26 @@ const Exercise = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-400">
-                  <div className="text-center">
-                    <Play className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600 text-lg">YouTube Video Placeholder</p>
-                    <p className="text-sm text-gray-500">Video ID: {exerciseId}-tutorial</p>
+                {exerciseVideos[exerciseId || ""] ? (
+                  <div className="aspect-video bg-black rounded-lg flex items-center justify-center border-2 border-primary mb-4">
+                    <iframe
+                      className="w-full h-full rounded-lg"
+                      src={`https://www.youtube.com/embed/${exerciseVideos[exerciseId || ""]}`}
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
                   </div>
-                </div>
+                ) : (
+                  <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-400">
+                    <div className="text-center">
+                      <Play className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600 text-lg">YouTube Video Placeholder</p>
+                      <p className="text-sm text-gray-500">Video ID: {exerciseId}-tutorial</p>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
