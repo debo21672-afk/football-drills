@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,50 +16,50 @@ interface Exercise {
 const level2Exercises: Exercise[] = [
   {
     id: "2-1",
-    name: "Right Foot Weave",
-    description: "Weave in and out of the cones using the inside and outside of the right foot taking a touch every step.",
+    name: "Single Leg Inside Outside",
+    description: "Hop on your standing leg, moving the ball side to side using the inside and outside of the foot",
     difficulty: "Easy",
     videoId: "placeholder-2-1"
   },
   {
     id: "2-2",
-    name: "Left Foot Weave",
-    description: "Weave in and out of the cones using the inside and outside of the left foot taking a touch every step.",
+    name: "No Touch Stepovers",
+    description: "Keeping the ball still, step around the ball with both feet",
     difficulty: "Easy",
     videoId: "placeholder-2-2"
   },
   {
     id: "2-3",
-    name: "Inside Foot Double U",
-    description: "Pull ball back with the sole of your foot, push ball across body with inside of the foot, push forward with opposite foot and repeat.",
+    name: "Brazilian Taps",
+    description: "Tap the ball with both soles followed by a third touch behind the standing leg",
     difficulty: "Medium",
     videoId: "placeholder-2-3"
   },
   {
     id: "2-4",
-    name: "Outside Foot Double U",
-    description: "Pull ball back with the sole of your foot, push ball across body with outside of the foot, push forward with inside foot and repeat.",
+    name: "3 Point Push Pulls",
+    description: "Push the ball to the inside, centre and outside using the toe and pulling back with the sole",
     difficulty: "Medium",
     videoId: "placeholder-2-4"
   },
   {
     id: "2-5",
-    name: "L Drag Double U",
-    description: "Pull ball back and push behind standing leg with inside of foot then forward with inside of opposite foot and repeat.",
-    difficulty: "Hard",
+    name: "Squares",
+    description: "Using the sole and inside of both feet, move the ball in a square shaped pattern",
+    difficulty: "Medium",
     videoId: "placeholder-2-5"
   },
   {
     id: "2-6",
-    name: "Sideways Infinity",
-    description: "Draw an infinity symbol (figure of 8) around the cones using the inside and sole of both feet.",
+    name: "Single Leg V Cuts",
+    description: "Using one foot at a time, create a V shape by pushing the ball to the inside and outside",
     difficulty: "Hard",
     videoId: "placeholder-2-6"
   },
   {
     id: "2-7",
-    name: "Alternating V Cuts",
-    description: "Perform an Inside Foot V cut, exchange feet and immediately perform Alternate V Cut.",
+    name: "V Cuts",
+    description: "Create a V pattern, this time using both feet, changing feet each time",
     difficulty: "Hard",
     videoId: "placeholder-2-7"
   },
@@ -403,8 +402,8 @@ const level8Exercises: Exercise[] = [
   {
     id: "8-4",
     name: "Inside Inside",
-    description: "Alternate touches with the inside of both feet, focusing on close control and rhythm.",
-    difficulty: "Easy",
+    description: "Alternate touches with the inside of both feet, focusing on close control.",
+    difficulty: "Medium",
     videoId: "placeholder-8-4"
   },
   {
@@ -440,43 +439,43 @@ const level9Exercises: Exercise[] = [
   },
   {
     id: "9-2",
-    name: "Sole Outside (V)",
-    description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
+    name: "Roll Inside",
+    description: "Roll the ball with the sole and tap inside to train foot dexterity and close control.",
     difficulty: "Medium",
     videoId: "placeholder-9-2"
   },
   {
     id: "9-3",
-    name: "Inside Inside",
-    description: "Alternate touches with the inside of both feet, focusing on close control.",
+    name: "Sole Outside (V)",
+    description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
     difficulty: "Medium",
     videoId: "placeholder-9-3"
   },
   {
     id: "9-4",
-    name: "Roll Inside",
-    description: "Roll the ball with the sole and tap inside to train foot dexterity.",
-    difficulty: "Medium",
+    name: "Inside Inside",
+    description: "Alternate touches with the inside of both feet, focusing on close control and rhythm.",
+    difficulty: "Easy",
     videoId: "placeholder-9-4"
   },
   {
     id: "9-5",
-    name: "Single Sole Outside",
-    description: "Use only one foot's sole to roll and then push outside, isolating control to one side.",
-    difficulty: "Medium",
+    name: "Slide (Chop Inside)",
+    description: "Quick lateral movement with the inside of the foot, chopping the ball to change direction.",
+    difficulty: "Hard",
     videoId: "placeholder-9-5"
   },
   {
     id: "9-6",
-    name: "Single Slide",
-    description: "Slide the ball sideways using one foot, keeping the ball under close control.",
+    name: "Single Sole Role (V)",
+    description: "Roll the ball with the sole in a V pattern using only one foot for enhanced control.",
     difficulty: "Hard",
     videoId: "placeholder-9-6"
   },
   {
     id: "9-7",
-    name: "Single Foot Roll Outside",
-    description: "Roll the ball then push outside with the same foot, combining rolling and lateral movement.",
+    name: "Sole-Sole Outside",
+    description: "Combine sole touches with outside foot movements for advanced ball manipulation.",
     difficulty: "Hard",
     videoId: "placeholder-9-7"
   }
