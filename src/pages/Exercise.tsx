@@ -21,6 +21,13 @@ const exerciseVideos: { [key: string]: string } = {
   "8-5": "Ui-kIJ8pMys",
   "8-6": "oGNnlzIYP-Q",
   "8-7": "PLZOyRwBth8",
+  "9-1": "98-tu50f_QQ",
+  "9-2": "CKOOaG7vJi8",
+  "9-3": "FidOlZhrgu0",
+  "9-4": "OfmG0jGRh0Q",
+  "9-5": "GIfx7k7UNMA",
+  "9-6": "t4fdMdRjyVQ",
+  "9-7": "Mry1NmiArv4",
 };
 
 const Exercise = () => {
@@ -99,6 +106,13 @@ const Exercise = () => {
       '1-5': { name: 'Pull Back', description: 'Pull ball back with sole and push forward' },
       '1-6': { name: 'L-Shape', description: 'Inside touch followed by forward push' },
       '1-7': { name: 'Foundation', description: 'Combination of basic touches' },
+      '9-1': { name: 'Level 9 Exercise 1', description: 'Advanced ball mastery exercise' },
+      '9-2': { name: 'Level 9 Exercise 2', description: 'Advanced ball mastery exercise' },
+      '9-3': { name: 'Level 9 Exercise 3', description: 'Advanced ball mastery exercise' },
+      '9-4': { name: 'Level 9 Exercise 4', description: 'Advanced ball mastery exercise' },
+      '9-5': { name: 'Level 9 Exercise 5', description: 'Advanced ball mastery exercise' },
+      '9-6': { name: 'Level 9 Exercise 6', description: 'Advanced ball mastery exercise' },
+      '9-7': { name: 'Level 9 Exercise 7', description: 'Advanced ball mastery exercise' },
     };
 
     return exercises[exerciseId as keyof typeof exercises] || { 
