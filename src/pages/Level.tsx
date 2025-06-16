@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,51 +69,51 @@ const level2Exercises: Exercise[] = [
 const maestroExercises: Exercise[] = [
   {
     id: "1-1",
-    name: "Inside Foot U",
-    description: "Pull ball towards you using the sole of your foot, push ball across body with inside of the foot, push forward with opposite foot",
+    name: "Toe Taps",
+    description: "Keeping the ball stationary, tap the top of the ball with the soles of both feet",
     difficulty: "Easy",
     videoId: "placeholder-1-1"
   },
   {
     id: "1-2",
-    name: "Outside Foot U",
-    description: "Pull ball back towards you and then across your body with the outside of the foot. Repeat both sides.",
+    name: "Bell Taps",
+    description: "Transfer ball from side to side in a \"bell ringing\" motion, using the inside of both feet",
     difficulty: "Easy",
     videoId: "placeholder-1-2"
   },
   {
     id: "1-3",
-    name: "Inside Foot V Cut",
-    description: "Pull ball towards you with the sole diagonally and push in the opposite direction with the inside foot.",
-    difficulty: "Medium",
+    name: "Inside Outside",
+    description: "Move the ball between both feet using the inside and outside of the foot",
+    difficulty: "Easy",
     videoId: "placeholder-1-3"
   },
   {
     id: "1-4",
-    name: "Outside Foot V Cut",
-    description: "Pull ball towards you diagonally, exchange feet and push the opposite way with the inside of the foot.",
-    difficulty: "Medium",
+    name: "Rocking Sole",
+    description: "Rock the ball from side to side using the sole of the foot",
+    difficulty: "Easy",
     videoId: "placeholder-1-4"
   },
   {
     id: "1-5",
-    name: "Alternate Foot V Cut",
-    description: "Pull ball towards you diagonally, exchange feet and push the opposite way with the inside of the foot.",
-    difficulty: "Medium",
+    name: "Sole Rolls",
+    description: "Transfer the ball from one foot to the other by rolling the foot over the ball",
+    difficulty: "Easy",
     videoId: "placeholder-1-5"
   },
   {
     id: "1-6",
-    name: "L Drag U",
-    description: "Pull ball towards you and push behind standing leg with inside of the foot. Repeat both sides.",
-    difficulty: "Hard",
+    name: "Sole Inside Push",
+    description: "Trap the ball underneath the foot and roll foot outwards to push ball across with the inside of foot",
+    difficulty: "Medium",
     videoId: "placeholder-1-6"
   },
   {
     id: "1-7",
-    name: "Sole Square",
-    description: "Draw a square around the cone using the soles of both feet.",
-    difficulty: "Hard",
+    name: "Brazilian Trap",
+    description: "Roll the ball across the body then trap the ball with the opposite sole of the foot behind standing leg",
+    difficulty: "Medium",
     videoId: "placeholder-1-7"
   },
 ];

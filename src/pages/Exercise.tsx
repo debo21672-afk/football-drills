@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { TimerComponent } from '@/components/TimerComponent';
@@ -99,13 +100,13 @@ const Exercise = () => {
     if (!exerciseId) return null;
     
     const exercises = {
-      '1-1': { name: 'Toe Taps', description: 'Quick toe touches on top of the ball' },
-      '1-2': { name: 'Inside Touch', description: 'Touch ball with inside of both feet alternately' },
-      '1-3': { name: 'Outside Touch', description: 'Touch ball with outside of both feet' },
-      '1-4': { name: 'Sole Rolls', description: 'Roll ball forward and backward with sole' },
-      '1-5': { name: 'Pull Back', description: 'Pull ball back with sole and push forward' },
-      '1-6': { name: 'L-Shape', description: 'Inside touch followed by forward push' },
-      '1-7': { name: 'Foundation', description: 'Combination of basic touches' },
+      '1-1': { name: 'Toe Taps', description: 'Keeping the ball stationary, tap the top of the ball with the soles of both feet' },
+      '1-2': { name: 'Bell Taps', description: 'Transfer ball from side to side in a "bell ringing" motion, using the inside of both feet' },
+      '1-3': { name: 'Inside Outside', description: 'Move the ball between both feet using the inside and outside of the foot' },
+      '1-4': { name: 'Rocking Sole', description: 'Rock the ball from side to side using the sole of the foot' },
+      '1-5': { name: 'Sole Rolls', description: 'Transfer the ball from one foot to the other by rolling the foot over the ball' },
+      '1-6': { name: 'Sole Inside Push', description: 'Trap the ball underneath the foot and roll foot outwards to push ball across with the inside of foot' },
+      '1-7': { name: 'Brazilian Trap', description: 'Roll the ball across the body then trap the ball with the opposite sole of the foot behind standing leg' },
       '8-1': { name: 'Inside Out', description: 'Move the ball from inside to outside of the foot to improve lateral quickness and ball control.' },
       '8-2': { name: 'Roll Inside', description: 'Roll the ball with the sole and tap inside to train foot dexterity and close control.' },
       '8-3': { name: 'Sole Outside (V)', description: 'Use the sole to roll the ball back and then push outside in a V shape for change of direction.' },
