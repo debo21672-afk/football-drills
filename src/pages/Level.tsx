@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -484,6 +485,11 @@ const level9Exercises: Exercise[] = [
 const Level = () => {
   const { levelId } = useParams();
   const [bestScores, setBestScores] = useState<{ [exerciseId: string]: number }>({});
+
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const savedProgress = localStorage.getItem('footballAppProgress');
