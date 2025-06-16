@@ -387,43 +387,43 @@ const level8Exercises: Exercise[] = [
   },
   {
     id: "8-2",
-    name: "Sole Outside (V)",
-    description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
+    name: "Roll Inside",
+    description: "Roll the ball with the sole and tap inside to train foot dexterity.",
     difficulty: "Medium",
     videoId: "placeholder-8-2"
   },
   {
     id: "8-3",
-    name: "Inside Inside",
-    description: "Alternate touches with the inside of both feet, focusing on close control.",
+    name: "Sole Outside (V)",
+    description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
     difficulty: "Medium",
     videoId: "placeholder-8-3"
   },
   {
     id: "8-4",
-    name: "Roll Inside",
-    description: "Roll the ball with the sole and tap inside to train foot dexterity.",
-    difficulty: "Medium",
+    name: "Inside Inside",
+    description: "Alternate touches with the inside of both feet, focusing on close control and rhythm.",
+    difficulty: "Easy",
     videoId: "placeholder-8-4"
   },
   {
     id: "8-5",
-    name: "Single Sole Outside",
-    description: "Use only one foot’s sole to roll and then push outside, isolating control to one side.",
-    difficulty: "Medium",
+    name: "Slide (Chop Inside)",
+    description: "Quick lateral movement with the inside of the foot, chopping the ball to change direction.",
+    difficulty: "Hard",
     videoId: "placeholder-8-5"
   },
   {
     id: "8-6",
-    name: "Single Slide",
-    description: "Slide the ball sideways using one foot, keeping the ball under close control.",
+    name: "Single Sole Role (V)",
+    description: "Roll the ball with the sole in a V pattern using only one foot for enhanced control.",
     difficulty: "Hard",
     videoId: "placeholder-8-6"
   },
   {
     id: "8-7",
-    name: "Single Foot Roll Outside",
-    description: "Roll the ball then push outside with the same foot, combining rolling and lateral movement.",
+    name: "Sole-Sole Outside",
+    description: "Combine sole touches with outside foot movements for advanced ball manipulation.",
     difficulty: "Hard",
     videoId: "placeholder-8-7"
   }
@@ -439,43 +439,43 @@ const level9Exercises: Exercise[] = [
   },
   {
     id: "9-2",
-    name: "Roll Inside",
-    description: "Roll the ball with the sole and tap inside to train foot dexterity and close control.",
+    name: "Sole Outside (V)",
+    description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
     difficulty: "Medium",
     videoId: "placeholder-9-2"
   },
   {
     id: "9-3",
-    name: "Sole Outside (V)",
-    description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
+    name: "Inside Inside",
+    description: "Alternate touches with the inside of both feet, focusing on close control.",
     difficulty: "Medium",
     videoId: "placeholder-9-3"
   },
   {
     id: "9-4",
-    name: "Inside Inside",
-    description: "Alternate touches with the inside of both feet, focusing on close control and rhythm.",
-    difficulty: "Easy",
+    name: "Roll Inside",
+    description: "Roll the ball with the sole and tap inside to train foot dexterity.",
+    difficulty: "Medium",
     videoId: "placeholder-9-4"
   },
   {
     id: "9-5",
-    name: "Slide (Chop Inside)",
-    description: "Quick lateral movement with the inside of the foot, chopping the ball to change direction.",
-    difficulty: "Hard",
+    name: "Single Sole Outside",
+    description: "Use only one foot's sole to roll and then push outside, isolating control to one side.",
+    difficulty: "Medium",
     videoId: "placeholder-9-5"
   },
   {
     id: "9-6",
-    name: "Single Sole Role (V)",
-    description: "Roll the ball with the sole in a V pattern using only one foot for enhanced control.",
+    name: "Single Slide",
+    description: "Slide the ball sideways using one foot, keeping the ball under close control.",
     difficulty: "Hard",
     videoId: "placeholder-9-6"
   },
   {
     id: "9-7",
-    name: "Sole-Sole Outside",
-    description: "Combine sole touches with outside foot movements for advanced ball manipulation.",
+    name: "Single Foot Roll Outside",
+    description: "Roll the ball then push outside with the same foot, combining rolling and lateral movement.",
     difficulty: "Hard",
     videoId: "placeholder-9-7"
   }
