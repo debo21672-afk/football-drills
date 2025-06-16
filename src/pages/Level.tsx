@@ -121,50 +121,50 @@ const maestroExercises: Exercise[] = [
 const level3Exercises: Exercise[] = [
   {
     id: "3-1",
-    name: "Sole Rolls",
-    description: "Roll the ball between the cones from one foot to the other using the sole of the foot.",
+    name: "V Cut Exchange",
+    description: "Perform a V cut by dragging the ball back with the sole of the inside of the opposite foot",
     difficulty: "Easy",
     videoId: "placeholder-3-1"
   },
   {
     id: "3-2",
-    name: "Nutmegs",
-    description: "Pull ball towards back and push through the cones using the outside of the foot. Repeat both sides.",
+    name: "Sole Roll Stop",
+    description: "Using the sole of the foot, move the ball across the body, stopping with the opposite sole",
     difficulty: "Easy",
     videoId: "placeholder-3-2"
   },
   {
     id: "3-3",
-    name: "Upside Down U",
-    description: "Push ball forward with inside of the foot, sole roll through the cones and pull back with the sole.",
+    name: "Inside Touch Stepover",
+    description: "Nudge the ball with the inside of your foot, step around the ball and repeat on opposite feet",
     difficulty: "Medium",
     videoId: "placeholder-3-3"
   },
   {
     id: "3-4",
-    name: "Forwards Infinity",
-    description: "Draw an Infinity symbol (figure of 8) with the ball around the cones with the sole and inside of both feet.",
+    name: "Sole Roll Stepover",
+    description: "Roll ball across your body using the sole, then perform an inside stopover with the opposite foot",
     difficulty: "Medium",
     videoId: "placeholder-3-4"
   },
   {
     id: "3-5",
-    name: "V Cut Triangle",
-    description: "Perform an Inside Foot V Cut and Sole Roll the ball through the cones and repeat.",
+    name: "L Drag Pivot",
+    description: "Perform an L Drag, pivoting on your standing leg to repeat the move continuously",
     difficulty: "Medium",
     videoId: "placeholder-3-5"
   },
   {
     id: "3-6",
-    name: "L Drag Triangle",
-    description: "Perform the L Drag and double Sole Roll the ball through the cones to repeat on opposite foot.",
+    name: "L Drag L Drag",
+    description: "Perform the L Drag then switch feet to repay the move on the opposite side",
     difficulty: "Hard",
     videoId: "placeholder-3-6"
   },
   {
     id: "3-7",
-    name: "L Drag V Cut Triangle",
-    description: "Perform the L Drag followed by the Alternate V Cut and Sole Roll the ball through the cones.",
+    name: "Elastico Elastico",
+    description: "Push the ball with the outside of the foot, then move foot around the ball to push back with the inside",
     difficulty: "Hard",
     videoId: "placeholder-3-7"
   }
