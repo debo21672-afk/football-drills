@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Star, Play } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface LevelProgress {
   levelId: number;
@@ -13,6 +13,7 @@ interface LevelProgress {
 
 const Index = () => {
   const [progress, setProgress] = useState<{ [levelId: number]: LevelProgress }>({});
+  const location = useLocation();
 
   useEffect(() => {
     const savedProgress = localStorage.getItem('footballAppProgress');
@@ -20,6 +21,21 @@ const Index = () => {
       setProgress(JSON.parse(savedProgress));
     }
   }, []);
+
+  useEffect(() => {
+    // Restore scroll position when coming back to index page
+    const savedScrollPosition = sessionStorage.getItem('indexScrollPosition');
+    if (savedScrollPosition && location.pathname === '/') {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+      }, 0);
+    }
+  }, [location.pathname]);
+
+  const handleLevelClick = () => {
+    // Save current scroll position before navigating
+    sessionStorage.setItem('indexScrollPosition', window.scrollY.toString());
+  };
 
   const levels = Array.from({ length: 10 }, (_, i) => ({
     id: i + 1,
@@ -85,7 +101,7 @@ const Index = () => {
             const completionPercentage = (levelProgress.completedExercises / level.exerciseCount) * 100;
             
             return (
-              <Link key={level.id} to={`/level/${level.id}`}>
+              <Link key={level.id} to={`/level/${level.id}`} onClick={handleLevelClick}>
                 <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer border-2 hover:border-primary">
                   <CardHeader className="pb-3">
                     <div className={`w-16 h-16 rounded-full ${level.color} flex items-center justify-center mb-2 mx-auto`}>
