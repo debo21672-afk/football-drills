@@ -172,51 +172,51 @@ const level3Exercises: Exercise[] = [
 const level4Exercises: Exercise[] = [
   {
     id: "4-1",
-    name: "Triple Push Pull",
-    description: "Push ball with the laces and pull back with the sole to the inside, forwards and then outside.",
+    name: "L Drag Sole Roll",
+    description: "Perform an L Drag followed by a Sole Roll across the body to repeat the move",
     difficulty: "Easy",
     videoId: "placeholder-4-1"
   },
   {
     id: "4-2",
-    name: "Double V Cut Sole Roll",
-    description: "Perform a double Inside Foot V Cut and Sole Roll the ball in front of the base cones of the triangle.",
-    difficulty: "Easy",
+    name: "Inside Touch Stepover Outside Touch",
+    description: "Touch the ball with the inside of the foot, step over the ball, take an outside foot touch then repeat",
+    difficulty: "Medium",
     videoId: "placeholder-4-2"
   },
   {
     id: "4-3",
-    name: "Pyramids",
-    description: "Sole Roll the ball behind the base cones of the triangle, push forward and work your way up and back down the triangle.",
-    difficulty: "Easy",
+    name: "Sole Laces",
+    description: "Using the sole, drag the ball backwards and catch the ball with your laces to push forwards",
+    difficulty: "Medium",
     videoId: "placeholder-4-3"
   },
   {
     id: "4-4",
-    name: "Right Foot Weave",
-    description: "Weave around the course going around each of the cones using the inside and outside of your right foot.",
-    difficulty: "Easy",
+    name: "Reverse L Drag L Drag",
+    description: "Roll the ball behind standing leg and push forwards with the same foot, then L Drag to repeat",
+    difficulty: "Medium",
     videoId: "placeholder-4-4"
   },
   {
     id: "4-5",
-    name: "Left Foot Weave",
-    description: "Weave around the course going around each of the cones using the inside and outside of your left foot.",
-    difficulty: "Easy",
+    name: "Reverse L Drag Pivot",
+    description: "Perform a reverse L Drag while pivoting on the standing leg to retrieve the ball and repeat",
+    difficulty: "Medium",
     videoId: "placeholder-4-5"
   },
   {
     id: "4-6",
-    name: "Sole Weave",
-    description: "Weave around the course going around each of the cones using the sole of both feet.",
-    difficulty: "Easy",
+    name: "Double Reverse L Drag",
+    description: "Perform a Reverse L Drag, switching feet mid move to repeat on the opposite side",
+    difficulty: "Hard",
     videoId: "placeholder-4-6"
   },
   {
     id: "4-7",
-    name: "Inside Outside Weave",
-    description: "Weave around the course going around each of the cones using the inside and outside of both feet.",
-    difficulty: "Easy",
+    name: "Infinity Stepovers",
+    description: "Touch the ball gently with the inside of the foot, step around ball with opposite foot and repeat",
+    difficulty: "Hard",
     videoId: "placeholder-4-7"
   }
 ];
@@ -224,51 +224,51 @@ const level4Exercises: Exercise[] = [
 const level5Exercises: Exercise[] = [
   {
     id: "5-1",
-    name: "Cross Soles",
-    description: "Facing forwards, roll ball to each side of the square and back to the centre using the sole of the foot.",
+    name: "Outside Cuts",
+    description: "Using the outside of your foot, cut sharply alternating feet each time",
     difficulty: "Easy",
     videoId: "placeholder-5-1"
   },
   {
     id: "5-2",
-    name: "Oblongs",
-    description: "Draw an oblong shape with the ball around the 2 base cones using the inside and sole of both feet.",
-    difficulty: "Easy",
+    name: "The Cruyff",
+    description: "Using the inside of the foot, hook the ball behind the opposite leg and repeat both sides",
+    difficulty: "Medium",
     videoId: "placeholder-5-2"
   },
   {
     id: "5-3",
-    name: "Forwards Backwards Soles",
-    description: "Roll the ball forwards and backwards up the sides and down the middle of the square using the sole.",
-    difficulty: "Easy",
+    name: "Half Maradona",
+    description: "Drag the ball towards you with your sole, hop and exchange feet and roll 90 degrees.",
+    difficulty: "Medium",
     videoId: "placeholder-5-3"
   },
   {
     id: "5-4",
-    name: "Single Leg Sole Maze",
-    description: "Roll the ball forwards, outside, forwards inside, backwards, outside, backwards with the sole. Repeat both sides.",
-    difficulty: "Easy",
+    name: "The Ronaldinho",
+    description: "Sole roll the ball across body and stop with back foot, then drag away and push forward",
+    difficulty: "Hard",
     videoId: "placeholder-5-4"
   },
   {
     id: "5-5",
-    name: "Parallels",
-    description: "Sole roll the ball behind the base cones, roll ball forwards then repeat all the way up to the front of the square and back to the start.",
-    difficulty: "Easy",
+    name: "Sole Cruyff",
+    description: "Pull ball towards you with the sole then Cruyff across body and repeat",
+    difficulty: "Medium",
     videoId: "placeholder-5-5"
   },
   {
     id: "5-6",
-    name: "Two Feet Maze",
-    description: "Using both feet, roll the ball forwards, outside, forwards inside, backwards, outside, backwards with the sole. Repeat both sides.",
-    difficulty: "Easy",
+    name: "Fake Shot Sole Roll",
+    description: "Slightly flex leg to imitate a shooting motion then role ball across the body to opposite foot",
+    difficulty: "Medium",
     videoId: "placeholder-5-6"
   },
   {
     id: "5-7",
-    name: "Matrix",
-    description: "Using the sole and inside of both feet, draw a square around all four corner cones with the ball.",
-    difficulty: "Easy",
+    name: "Fake Rabona",
+    description: "Bring leg behind opposite leg to fake a Robona, then cut the ball across and repeat",
+    difficulty: "Hard",
     videoId: "placeholder-5-7"
   },
 ];
@@ -276,51 +276,51 @@ const level5Exercises: Exercise[] = [
 const level6Exercises: Exercise[] = [
   {
     id: "6-1",
-    name: "Inside Foot Quarter Turn",
-    description: "Pull ball towards the middle of the square and push 90 degrees with the inside of the same foot around all four sides.",
-    difficulty: "Easy",
+    name: "Sole Sole Inside Inside",
+    description: "Perform a double sole roll followed immediately by double bell taps and repeat",
+    difficulty: "Medium",
     videoId: "placeholder-6-1"
   },
   {
     id: "6-2",
-    name: "Outside Foot Quarter Turn",
-    description: "Pull ball towards the middle of the square and push 90 degrees with the outside of the same foot around all four sides.",
-    difficulty: "Easy",
+    name: "Outside Drag Toe Nudge",
+    description: "Drag the ball down the outside of your leg and nudge forwards using the toe of the same foot",
+    difficulty: "Medium",
     videoId: "placeholder-6-2"
   },
   {
     id: "6-3",
-    name: "Alternating Feet Quarter Turn",
-    description: "Pull ball towards the middle of the square and push 90 degrees with the inside of the opposite foot around all four sides.",
-    difficulty: "Easy",
+    name: "The Ronaldo",
+    description: "Roll the ball across, step over the ball with the opposite leg and catch with the laces of behind leg",
+    difficulty: "Hard",
     videoId: "placeholder-6-3"
   },
   {
     id: "6-4",
-    name: "L Drag Quarter Turn",
-    description: "Pull ball towards the middle of the square and push 90 degrees behind the standing leg with the inside of the same foot around all four sides.",
-    difficulty: "Easy",
+    name: "Rollover Snap",
+    description: "Roll your foot over the ball then snap the foot down to flick the ball in the opposite direction",
+    difficulty: "Hard",
     videoId: "placeholder-6-4"
   },
   {
     id: "6-5",
-    name: "Reverse L Drag Quarter Turn",
-    description: "Pull ball down the outside of the standing leg and push 90 degrees with the inside of the same foot around all four sides.",
-    difficulty: "Easy",
+    name: "Stepover Sole Rolls",
+    description: "Roll the ball between the soles, stepping over the ball between each touch",
+    difficulty: "Medium",
     videoId: "placeholder-6-5"
   },
   {
     id: "6-6",
-    name: "Outer Square Sole",
-    description: "Using the sole of both feet, roll the ball around the outside of the square forwards and laterally keeping as close to the cones as possible.",
-    difficulty: "Easy",
+    name: "Inside Double Stepover Outside",
+    description: "Nudge the ball with the inside of the foot, stepover the ball with both feet then nudge with the outside of opposite foot",
+    difficulty: "Hard",
     videoId: "placeholder-6-6"
   },
   {
     id: "6-7",
-    name: "Samba",
-    description: "Sole roll ball to the middle of the square, inside stepover, outside stepover, continue sole roll across and repeat in the opposite direction.",
-    difficulty: "Easy",
+    name: "Stepover Inside Inside",
+    description: "Step around the ball, hopping into an inside to inside touch",
+    difficulty: "Medium",
     videoId: "placeholder-6-7"
   },
 ];
@@ -328,51 +328,51 @@ const level6Exercises: Exercise[] = [
 const level7Exercises: Exercise[] = [
   {
     id: "7-1",
-    name: "Inside Foot Wheel",
-    description: "Pull ball back with the sole and across with the inside of the foot then push forward with the opposite foot and repeat around entire circle.",
-    difficulty: "Easy",
+    name: "Drag Pass",
+    description: "Use the sole of the foot to drag the ball towards the inside of opposite foot to tap the ball and repeat",
+    difficulty: "Medium",
     videoId: "placeholder-7-1"
   },
   {
     id: "7-2",
-    name: "Outside Foot Wheel",
-    description: "Pull ball back with the sole and across with the outside of the foot then push forward with the same foot and repeat around entire circle.",
-    difficulty: "Easy",
+    name: "Roll Stepover Cut",
+    description: "Roll the ball with the sole of the foot, stepping over the ball and cutting with the inside of opposite foot",
+    difficulty: "Medium",
     videoId: "placeholder-7-2"
   },
   {
     id: "7-3",
-    name: "Single Leg Sole Wheel",
-    description: "Roll the ball inside and outside of the circle around the cones using the sole of the foot.",
-    difficulty: "Easy",
+    name: "Double Sole L Drag",
+    description: "Roll the ball twice across the body followed by an L Drag to repeat in the opposite direction",
+    difficulty: "Hard",
     videoId: "placeholder-7-3"
   },
   {
     id: "7-4",
-    name: "Two Foot Wheel",
-    description: "Roll the ball inside and outside of the circle around the cones using the inside and sole of both feet.",
-    difficulty: "Easy",
+    name: "L Drag to V Cut",
+    description: "Perform an L Drag, immediately followed by a V Cut",
+    difficulty: "Hard",
     videoId: "placeholder-7-4"
   },
   {
     id: "7-5",
-    name: "Right Foot Weave",
-    description: "Weave in and out of the cones around the circle using the inside and outside of your right foot.",
-    difficulty: "Easy",
+    name: "Outside Nudge Stepover",
+    description: "Lightly nudge the ball with the outside of your foot then step over the ball with opposite foot",
+    difficulty: "Medium",
     videoId: "placeholder-7-5"
   },
   {
     id: "7-6",
-    name: "Left Foot Weave",
-    description: "Weave in and out of the cones around the circle using the inside and outside of your left foot.",
-    difficulty: "Easy",
+    name: "Ronaldinho Fake Pass",
+    description: "Roll the ball back as if you were performing an L Drag but instead catch the ball with the laces",
+    difficulty: "Hard",
     videoId: "placeholder-7-6"
   },
   {
     id: "7-7",
-    name: "Two Foot Weave",
-    description: "Weave in and out of the cones around the circle using all areas of both feet.",
-    difficulty: "Easy",
+    name: "Neymar Chop",
+    description: "Roll foot over the ball then as the ball rolls to the other side, chop behind the leg with the inside of opposite foot",
+    difficulty: "Hard",
     videoId: "placeholder-7-7"
   },
 ];
@@ -387,43 +387,43 @@ const level8Exercises: Exercise[] = [
   },
   {
     id: "8-2",
-    name: "Roll Inside",
-    description: "Roll the ball with the sole and tap inside to train foot dexterity.",
-    difficulty: "Medium",
-    videoId: "placeholder-8-2"
-  },
-  {
-    id: "8-3",
     name: "Sole Outside (V)",
     description: "Use the sole to roll the ball back and then push outside in a V shape for change of direction.",
     difficulty: "Medium",
     videoId: "placeholder-8-3"
   },
   {
-    id: "8-4",
+    id: "8-3",
     name: "Inside Inside",
     description: "Alternate touches with the inside of both feet, focusing on close control.",
     difficulty: "Medium",
     videoId: "placeholder-8-4"
   },
   {
+    id: "8-4",
+    name: "Roll Inside",
+    description: "Roll the ball with the sole and tap inside to train foot dexterity.",
+    difficulty: "Medium",
+    videoId: "placeholder-8-2"
+  },
+  {
     id: "8-5",
-    name: "Slide (Chop Inside)",
-    description: "Quick lateral movement with the inside of the foot, chopping the ball to change direction.",
+    name: "Single Sole Outside",
+    description: "Use only one foot's sole to roll and then push outside, isolating control to one side.",
     difficulty: "Hard",
     videoId: "placeholder-8-5"
   },
   {
     id: "8-6",
-    name: "Single Sole Role (V)",
-    description: "Roll the ball with the sole in a V pattern using only one foot for enhanced control.",
+    name: "Single Slide",
+    description: "Slide the ball sideways using one foot, keeping the ball under close control.",
     difficulty: "Hard",
     videoId: "placeholder-8-6"
   },
   {
     id: "8-7",
-    name: "Sole-Sole Outside",
-    description: "Combine sole touches with outside foot movements for advanced ball manipulation.",
+    name: "Single Foot Roll Outside",
+    description: "Roll the ball then push outside with the same foot, combining rolling and lateral movement.",
     difficulty: "Hard",
     videoId: "placeholder-8-7"
   }
