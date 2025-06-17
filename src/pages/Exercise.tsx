@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { TimerComponent } from '@/components/TimerComponent';
@@ -28,6 +29,13 @@ const exerciseVideos: { [key: string]: string } = {
   "4-5": "HKt2D6KLa50",
   "4-6": "cIQex3fy7_4",
   "4-7": "x85g2_-kLqU",
+  "5-1": "o-Tp9fsUG_0",
+  "5-2": "M8sYfS6KirM",
+  "5-3": "uVTRWNCncDk",
+  "5-4": "QpsurE9L7Bs",
+  "5-5": "gMlxIotHRZM",
+  "5-6": "gbd4B8Ug81c",
+  "5-7": "1kI9hfw1qJQ",
   "8-1": "98-tu50f_QQ",
   "8-2": "CKOOaG7vJi8",
   "8-3": "FidOlZhrgu0",
