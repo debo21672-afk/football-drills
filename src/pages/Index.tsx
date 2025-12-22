@@ -1,25 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Star, Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Trophy, Star, Play, Settings, Flame } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-
-interface LevelProgress {
-  levelId: number;
-  completedExercises: number;
-  totalExercises: number;
-  bestScores: { [exerciseId: string]: number };
-}
+import { getProgress, getStreakData, LevelProgress, StreakData } from '@/utils/progressUtils';
+import { SettingsComponent } from '@/components/SettingsComponent';
 
 const Index = () => {
   const [progress, setProgress] = useState<{ [levelId: number]: LevelProgress }>({});
+  const [streakData, setStreakData] = useState<StreakData>({ currentStreak: 0, longestStreak: 0, lastSessionDate: null, totalSessions: 0 });
+  const [showSettings, setShowSettings] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const savedProgress = localStorage.getItem('footballAppProgress');
-    if (savedProgress) {
-      setProgress(JSON.parse(savedProgress));
-    }
+    setProgress(getProgress());
+    setStreakData(getStreakData());
   }, []);
 
   useEffect(() => {
@@ -55,7 +51,22 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+      {/* Settings Modal */}
+      {showSettings && <SettingsComponent onClose={() => setShowSettings(false)} />}
+
       <div className="max-w-6xl mx-auto">
+        {/* Settings Button */}
+        <div className="flex justify-end mb-2">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setShowSettings(true)}
+            className="hover:bg-white/50"
+          >
+            <Settings className="w-5 h-5" />
+          </Button>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
@@ -64,11 +75,24 @@ const Index = () => {
           </h1>
           <p className="text-lg text-gray-600 mb-4">Master your ball skills with fun exercises and challenges!</p>
           
-          <div className="flex justify-center items-center gap-4 mb-6">
+          <div className="flex justify-center items-center gap-3 mb-6 flex-wrap">
             <Badge variant="secondary" className="text-lg p-2">
               <Trophy className="w-5 h-5 mr-2" />
               {getTotalStars()} Stars Earned
             </Badge>
+            
+            {streakData.currentStreak > 0 && (
+              <Badge className="text-lg p-2 bg-orange-500 hover:bg-orange-600">
+                <Flame className="w-5 h-5 mr-2" />
+                {streakData.currentStreak} Day Streak
+              </Badge>
+            )}
+            
+            {streakData.longestStreak > 3 && (
+              <Badge variant="outline" className="text-lg p-2">
+                🏆 Best: {streakData.longestStreak} Days
+              </Badge>
+            )}
           </div>
         </div>
 
