@@ -1,42 +1,160 @@
-
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Play } from "lucide-react";
+import { Play, Gauge, Loader2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getSettings, saveSettings } from '@/utils/progressUtils';
 
 interface ExerciseVideoProps {
   exerciseId: string;
   exerciseVideos: { [key: string]: string };
 }
 
+const speedOptions = [
+  { value: '0.25', label: '0.25x' },
+  { value: '0.5', label: '0.5x' },
+  { value: '0.75', label: '0.75x' },
+  { value: '1', label: '1x' },
+  { value: '1.25', label: '1.25x' },
+  { value: '1.5', label: '1.5x' },
+  { value: '1.75', label: '1.75x' },
+  { value: '2', label: '2x' },
+];
+
 export const ExerciseVideo = ({ exerciseId, exerciseVideos }: ExerciseVideoProps) => {
+  const settings = getSettings();
+  const [isLoading, setIsLoading] = useState(true);
+  const [videoError, setVideoError] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(settings.videoSpeed.toString());
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const videoId = exerciseVideos[exerciseId];
+  const isPlaceholder = !videoId || videoId === 'placeholder' || videoId.startsWith('placeholder');
+
+  useEffect(() => {
+    setIsLoading(true);
+    setVideoError(false);
+  }, [exerciseId]);
+
+  const handleSpeedChange = (value: string) => {
+    setPlaybackSpeed(value);
+    const currentSettings = getSettings();
+    saveSettings({ ...currentSettings, videoSpeed: parseFloat(value) });
+    // Note: Actual playback speed control requires YouTube Player API
+  };
+
+  const handleRetry = () => {
+    setVideoError(false);
+    setIsLoading(true);
+  };
+
+  // Placeholder video card
+  if (isPlaceholder) {
+    return (
+      <Card className="border-yellow-300 bg-yellow-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-yellow-700">
+            <Play className="w-5 h-5" />
+            Video Coming Soon
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="aspect-video bg-yellow-100 rounded-lg flex items-center justify-center border-2 border-dashed border-yellow-300">
+            <div className="text-center">
+              <Play className="w-20 h-20 text-yellow-300 mx-auto mb-4" />
+              <p className="text-yellow-700 text-lg font-medium">Video Not Available Yet</p>
+              <p className="text-sm text-yellow-600 mt-2">Check back soon for the tutorial video</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Error state card
+  if (videoError) {
+    return (
+      <Card className="border-red-300 bg-red-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-red-700">
+            <Play className="w-5 h-5" />
+            Video Error
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="aspect-video bg-red-100 rounded-lg flex items-center justify-center border-2 border-dashed border-red-300">
+            <div className="text-center">
+              <Play className="w-16 h-16 text-red-300 mx-auto mb-4" />
+              <p className="text-red-700 text-lg font-medium">Failed to Load Video</p>
+              <p className="text-sm text-red-600 mt-2 mb-4">Please check your connection and try again</p>
+              <Button 
+                variant="outline" 
+                onClick={handleRetry}
+                className="border-red-300 text-red-700 hover:bg-red-100"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Retry
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Play className="w-5 h-5" />
-          Exercise Video
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Play className="w-5 h-5" />
+            Exercise Video
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            <Gauge className="w-4 h-4 text-muted-foreground" />
+            <Select value={playbackSpeed} onValueChange={handleSpeedChange}>
+              <SelectTrigger className="w-24 h-8">
+                <SelectValue placeholder="Speed" />
+              </SelectTrigger>
+              <SelectContent className="bg-white z-50">
+                {speedOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
-        {exerciseVideos[exerciseId] ? (
-          <div className="aspect-video bg-black rounded-lg flex items-center justify-center border-2 border-primary mb-4">
-            <iframe
-              className="w-full h-full rounded-lg"
-              src={`https://www.youtube.com/embed/${exerciseVideos[exerciseId]}?autoplay=1&loop=1&playlist=${exerciseVideos[exerciseId]}`}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
-          </div>
-        ) : (
-          <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-400">
-            <div className="text-center">
-              <Play className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 text-lg">YouTube Video Placeholder</p>
-              <p className="text-sm text-gray-500">Video ID: {exerciseId}-tutorial</p>
+        <div className="aspect-video bg-black rounded-lg flex items-center justify-center border-2 border-primary mb-4 relative">
+          {isLoading && (
+            <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-10 rounded-lg">
+              <div className="text-center">
+                <Loader2 className="w-12 h-12 text-white animate-spin mx-auto mb-2" />
+                <p className="text-white text-sm">Loading video...</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          <iframe
+            ref={iframeRef}
+            className="w-full h-full rounded-lg"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            onLoad={() => setIsLoading(false)}
+            onError={() => setVideoError(true)}
+          ></iframe>
+        </div>
       </CardContent>
     </Card>
   );
