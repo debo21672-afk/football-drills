@@ -94,10 +94,180 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border transition-colors duration-200;
   }
 
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Dark mode utility overrides */
+@layer utilities {
+  /* Background gradients */
+  .dark .bg-gradient-to-br.from-green-50.to-blue-50 {
+    --tw-gradient-from: hsl(222 84% 8%);
+    --tw-gradient-to: hsl(220 60% 12%);
+  }
+
+  /* White backgrounds */
+  .dark .bg-white {
+    background-color: hsl(222 84% 8%);
+  }
+
+  /* Gray text variants */
+  .dark .text-gray-800 {
+    color: hsl(210 40% 96%);
+  }
+
+  .dark .text-gray-600 {
+    color: hsl(215 20% 75%);
+  }
+
+  .dark .text-gray-500 {
+    color: hsl(215 16% 65%);
+  }
+
+  /* Gray background variants */
+  .dark .bg-gray-50 {
+    background-color: hsl(217 33% 20%);
+  }
+
+  .dark .bg-gray-100 {
+    background-color: hsl(217 33% 20%);
+  }
+
+  .dark .bg-gray-200 {
+    background-color: hsl(217 33% 25%);
+  }
+
+  /* Gray border variants */
+  .dark .border-gray-200 {
+    border-color: hsl(217 33% 20%);
+  }
+
+  /* Yellow variants */
+  .dark .bg-yellow-50 {
+    background-color: hsl(48 96% 50% / 0.1);
+  }
+
+  .dark .bg-yellow-100 {
+    background-color: hsl(48 96% 50% / 0.15);
+  }
+
+  .dark .text-yellow-700 {
+    color: hsl(48 96% 70%);
+  }
+
+  .dark .text-yellow-600 {
+    color: hsl(48 96% 65%);
+  }
+
+  .dark .border-yellow-200 {
+    border-color: hsl(48 96% 30%);
+  }
+
+  /* Red variants */
+  .dark .bg-red-50 {
+    background-color: hsl(0 84% 60% / 0.1);
+  }
+
+  .dark .bg-red-100 {
+    background-color: hsl(0 84% 60% / 0.15);
+  }
+
+  .dark .text-red-700 {
+    color: hsl(0 84% 75%);
+  }
+
+  .dark .text-red-600 {
+    color: hsl(0 84% 70%);
+  }
+
+  .dark .border-red-200 {
+    border-color: hsl(0 62% 30%);
+  }
+
+  /* Blue variants */
+  .dark .bg-blue-50 {
+    background-color: hsl(217 91% 60% / 0.1);
+  }
+
+  .dark .bg-blue-100 {
+    background-color: hsl(217 91% 60% / 0.15);
+  }
+
+  .dark .text-blue-700 {
+    color: hsl(217 91% 75%);
+  }
+
+  .dark .text-blue-600 {
+    color: hsl(217 91% 70%);
+  }
+
+  /* Green variants */
+  .dark .bg-green-50 {
+    background-color: hsl(142 76% 36% / 0.1);
+  }
+
+  .dark .bg-green-100 {
+    background-color: hsl(142 76% 36% / 0.15);
+  }
+
+  .dark .text-green-700 {
+    color: hsl(142 76% 65%);
+  }
+
+  .dark .text-green-600 {
+    color: hsl(142 76% 60%);
+  }
+
+  /* Purple variants */
+  .dark .bg-purple-50 {
+    background-color: hsl(270 76% 50% / 0.1);
+  }
+
+  .dark .bg-purple-100 {
+    background-color: hsl(270 76% 50% / 0.15);
+  }
+
+  .dark .text-purple-700 {
+    color: hsl(270 76% 75%);
+  }
+
+  .dark .text-purple-600 {
+    color: hsl(270 76% 70%);
+  }
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(210 40% 96%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(215 16% 70%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(215 16% 55%);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: hsl(217 33% 15%);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(217 33% 35%);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(217 33% 45%);
 }
