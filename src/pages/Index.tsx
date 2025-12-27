@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,26 +28,34 @@ const Index = () => {
     }
   }, [location.pathname]);
 
-  const handleLevelClick = () => {
+  const handleLevelClick = useCallback(() => {
     // Save current scroll position before navigating
     sessionStorage.setItem('indexScrollPosition', window.scrollY.toString());
-  };
+  }, []);
 
-  const levels = Array.from({ length: 10 }, (_, i) => ({
-    id: i + 1,
-    name: `Level ${i + 1}`,
-    description: `Ball mastery skills - ${i === 0 ? 'Beginner' : i < 3 ? 'Basic' : i < 6 ? 'Intermediate' : i < 8 ? 'Advanced' : 'Expert'}`,
-    exerciseCount: i % 2 === 0 ? 7 : 8,
-    color: i < 3 ? 'bg-green-500' : i < 6 ? 'bg-blue-500' : i < 8 ? 'bg-orange-500' : 'bg-red-500'
-  }));
+  // Memoize levels array to avoid recreation on every render
+  const levels = useMemo(() =>
+    Array.from({ length: 10 }, (_, i) => ({
+      id: i + 1,
+      name: `Level ${i + 1}`,
+      description: `Ball mastery skills - ${i === 0 ? 'Beginner' : i < 3 ? 'Basic' : i < 6 ? 'Intermediate' : i < 8 ? 'Advanced' : 'Expert'}`,
+      exerciseCount: (i + 1) % 2 === 0 ? 7 : 8,
+      color: i < 3 ? 'bg-green-500' : i < 6 ? 'bg-blue-500' : i < 8 ? 'bg-orange-500' : 'bg-red-500'
+    }))
+  , []);
 
-  const getLevelProgress = (levelId: number) => {
-    return progress[levelId] || { levelId, completedExercises: 0, totalExercises: levels.find(l => l.id === levelId)?.exerciseCount || 7, bestScores: {} };
-  };
+  const getLevelProgress = useCallback((levelId: number) => {
+    return progress[levelId] || {
+      levelId,
+      completedExercises: 0,
+      totalExercises: levels.find(l => l.id === levelId)?.exerciseCount || 7,
+      bestScores: {}
+    };
+  }, [progress, levels]);
 
-  const getTotalStars = () => {
-    return Object.values(progress).reduce((total, level) => total + level.completedExercises, 0);
-  };
+  const totalStars = useMemo(() =>
+    Object.values(progress).reduce((total, level) => total + level.completedExercises, 0)
+  , [progress]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
@@ -78,7 +86,7 @@ const Index = () => {
           <div className="flex justify-center items-center gap-3 mb-6 flex-wrap">
             <Badge variant="secondary" className="text-lg p-2">
               <Trophy className="w-5 h-5 mr-2" />
-              {getTotalStars()} Stars Earned
+              {totalStars} Stars Earned
             </Badge>
             
             {streakData.currentStreak > 0 && (
