@@ -5,7 +5,7 @@ import { Timer, X, Pause, Play, Volume2, VolumeX } from "lucide-react";
 import { TimerControls } from './TimerControls';
 import { TimerDisplay } from './TimerDisplay';
 import { ScoreInput } from './ScoreInput';
-import { playCountdownSound, playStartSound, playWarningSound, playEndSound } from './TimerSounds';
+import { playCountdownSound, playStartSound, playFinalCountdownSound, playEndSound } from './TimerSounds';
 import { getSettings, saveSettings } from '@/utils/progressUtils';
 
 interface TimerComponentProps {
@@ -53,12 +53,12 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName, initialDura
       const timer = setTimeout(() => {
         const newTimeLeft = timeLeft - 1;
         setTimeLeft(newTimeLeft);
-        
-        // Warning sound for last 10 seconds
+
+        // Enhanced countdown sound for last 10 seconds - gets progressively more urgent
         if (newTimeLeft <= 10 && newTimeLeft > 0) {
-          if (soundEnabled) playWarningSound();
+          if (soundEnabled) playFinalCountdownSound(newTimeLeft);
         }
-        
+
         // End sound when timer finishes
         if (newTimeLeft === 0) {
           if (soundEnabled) playEndSound();
