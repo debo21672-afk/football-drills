@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
 
 const authSchema = z.object({
@@ -15,15 +15,21 @@ const authSchema = z.object({
   displayName: z.string().max(50, 'Display name must be less than 50 characters').optional()
 });
 
+const emailSchema = z.object({
+  email: z.string().email('Please enter a valid email address')
+});
+
+type AuthMode = 'login' | 'signup' | 'forgot';
+
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; displayName?: string }>({});
   
-  const { user, signIn, signUp, loading } = useAuth();
+  const { user, signIn, signUp, resetPassword, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +40,11 @@ const Auth = () => {
 
   const validateForm = () => {
     try {
-      authSchema.parse({ email, password, displayName: displayName || undefined });
+      if (mode === 'forgot') {
+        emailSchema.parse({ email });
+      } else {
+        authSchema.parse({ email, password, displayName: displayName || undefined });
+      }
       setErrors({});
       return true;
     } catch (error) {
@@ -59,7 +69,22 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
-      if (isLogin) {
+      if (mode === 'forgot') {
+        const { error } = await resetPassword(email);
+        if (error) {
+          toast({
+            title: 'Reset Failed',
+            description: error.message,
+            variant: 'destructive'
+          });
+        } else {
+          toast({
+            title: 'Check your email',
+            description: 'We sent you a password reset link.'
+          });
+          setMode('login');
+        }
+      } else if (mode === 'login') {
         const { error } = await signIn(email, password);
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
@@ -117,23 +142,45 @@ const Auth = () => {
     );
   }
 
+  const getTitle = () => {
+    switch (mode) {
+      case 'forgot': return 'Reset Password';
+      case 'signup': return 'Join Football Skills';
+      default: return 'Welcome Back!';
+    }
+  };
+
+  const getDescription = () => {
+    switch (mode) {
+      case 'forgot': return 'Enter your email and we\'ll send you a reset link';
+      case 'signup': return 'Create an account to save your training progress';
+      default: return 'Log in to track your progress and compete';
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="text-6xl mb-4">⚽</div>
-          <CardTitle className="text-2xl">
-            {isLogin ? 'Welcome Back!' : 'Join Football Skills'}
-          </CardTitle>
-          <CardDescription>
-            {isLogin 
-              ? 'Log in to track your progress and compete' 
-              : 'Create an account to save your training progress'}
-          </CardDescription>
+          {mode === 'forgot' && (
+            <button
+              type="button"
+              onClick={() => {
+                setMode('login');
+                setErrors({});
+              }}
+              className="absolute left-4 top-4 text-muted-foreground hover:text-primary"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+          <div className="text-6xl mb-4">{mode === 'forgot' ? '📧' : '⚽'}</div>
+          <CardTitle className="text-2xl">{getTitle()}</CardTitle>
+          <CardDescription>{getDescription()}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
+            {mode === 'signup' && (
               <div className="space-y-2">
                 <Label htmlFor="displayName">Display Name</Label>
                 <Input
@@ -164,47 +211,66 @@ const Auth = () => {
               )}
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              {errors.password && (
-                <p className="text-sm text-red-500">{errors.password}</p>
-              )}
-            </div>
+            {mode !== 'forgot' && (
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-500">{errors.password}</p>
+                )}
+              </div>
+            )}
+
+            {mode === 'login' && (
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('forgot');
+                    setErrors({});
+                  }}
+                  className="text-sm text-muted-foreground hover:text-primary underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
 
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {isLogin ? 'Logging in...' : 'Creating account...'}
+                  {mode === 'forgot' ? 'Sending...' : mode === 'login' ? 'Logging in...' : 'Creating account...'}
                 </>
               ) : (
-                isLogin ? 'Log In' : 'Create Account'
+                mode === 'forgot' ? 'Send Reset Link' : mode === 'login' ? 'Log In' : 'Create Account'
               )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setErrors({});
-              }}
-              className="text-sm text-muted-foreground hover:text-primary underline"
-            >
-              {isLogin 
-                ? "Don't have an account? Sign up" 
-                : 'Already have an account? Log in'}
-            </button>
-          </div>
+          {mode !== 'forgot' && (
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode(mode === 'login' ? 'signup' : 'login');
+                  setErrors({});
+                }}
+                className="text-sm text-muted-foreground hover:text-primary underline"
+              >
+                {mode === 'login' 
+                  ? "Don't have an account? Sign up" 
+                  : 'Already have an account? Log in'}
+              </button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
