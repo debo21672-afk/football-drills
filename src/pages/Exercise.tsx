@@ -8,6 +8,8 @@ import { SessionSummary } from '@/components/SessionSummary';
 import { toast } from "@/hooks/use-toast";
 import { exerciseVideoMap, allExercises } from '@/data/exercises';
 import { getProgress, saveProgress, addSession } from '@/utils/progressUtils';
+import { useAuth } from '@/hooks/useAuth';
+import { useCloudProgress } from '@/hooks/useCloudProgress';
 
 const Exercise = () => {
   const { exerciseId } = useParams();
@@ -15,45 +17,61 @@ const Exercise = () => {
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [showSummary, setShowSummary] = useState(false);
   const [lastScore, setLastScore] = useState(0);
+  
+  const { user } = useAuth();
+  const { saveScore: saveCloudScore, getBestScore } = useCloudProgress();
 
   useEffect(() => {
-    if (exerciseId) {
-      const progress = getProgress();
-      const [levelId] = exerciseId.split('-');
-      const levelProgress = progress[parseInt(levelId)];
-      if (levelProgress && levelProgress.bestScores[exerciseId]) {
-        setBestScore(levelProgress.bestScores[exerciseId]);
+    const loadBestScore = async () => {
+      if (!exerciseId) return;
+      
+      if (user) {
+        const cloudBest = await getBestScore(exerciseId);
+        setBestScore(cloudBest);
+      } else {
+        const progress = getProgress();
+        const [levelId] = exerciseId.split('-');
+        const levelProgress = progress[parseInt(levelId)];
+        if (levelProgress && levelProgress.bestScores[exerciseId]) {
+          setBestScore(levelProgress.bestScores[exerciseId]);
+        }
       }
-    }
-  }, [exerciseId]);
+    };
+    
+    loadBestScore();
+  }, [exerciseId, user, getBestScore]);
 
-  const saveScore = (score: number, duration: number = 60) => {
+  const saveScore = async (score: number, duration: number = 60) => {
     if (!exerciseId) return;
 
-    const [levelId] = exerciseId.split('-');
-    const progress = getProgress();
-    
-    if (!progress[parseInt(levelId)]) {
-      progress[parseInt(levelId)] = {
-        levelId: parseInt(levelId),
-        completedExercises: 0,
-        totalExercises: 7,
-        bestScores: {},
-        attempts: {}
-      };
-    }
-
     const isNewBest = !bestScore || score > bestScore;
-    const wasFirstTime = !progress[parseInt(levelId)].bestScores[exerciseId];
+    const wasFirstTime = !bestScore;
 
-    progress[parseInt(levelId)].bestScores[exerciseId] = Math.max(score, bestScore || 0);
-    progress[parseInt(levelId)].completedExercises = Object.keys(progress[parseInt(levelId)].bestScores).length;
+    if (user) {
+      // Save to cloud
+      await saveCloudScore(exerciseId, score);
+    } else {
+      // Save to localStorage
+      const [levelId] = exerciseId.split('-');
+      const progress = getProgress();
+      
+      if (!progress[parseInt(levelId)]) {
+        progress[parseInt(levelId)] = {
+          levelId: parseInt(levelId),
+          completedExercises: 0,
+          totalExercises: 7,
+          bestScores: {},
+          attempts: {}
+        };
+      }
 
-    saveProgress(progress);
+      progress[parseInt(levelId)].bestScores[exerciseId] = Math.max(score, bestScore || 0);
+      progress[parseInt(levelId)].completedExercises = Object.keys(progress[parseInt(levelId)].bestScores).length;
+      saveProgress(progress);
+      addSession(exerciseId, score, duration);
+    }
+    
     setBestScore(Math.max(score, bestScore || 0));
-
-    // Add session to history
-    addSession(exerciseId, score, duration);
 
     if (wasFirstTime) {
       toast({

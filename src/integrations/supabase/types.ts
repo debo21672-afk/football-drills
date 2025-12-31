@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          completed_at: string
+          exercise_id: string
+          id: string
+          score: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          exercise_id: string
+          id?: string
+          score: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          exercise_id?: string
+          id?: string
+          score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          attempts: number
+          best_score: number
+          created_at: string
+          exercise_id: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          best_score?: number
+          created_at?: string
+          exercise_id: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          best_score?: number
+          created_at?: string
+          exercise_id?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_streaks: {
+        Row: {
+          current_streak: number
+          id: string
+          last_activity_date: string | null
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_streak?: number
+          id?: string
+          last_activity_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_streak?: number
+          id?: string
+          last_activity_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
