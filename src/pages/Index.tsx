@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, Play, Settings, Flame, LogIn, LogOut, Shield } from "lucide-react";
+import { Trophy, Star, Play, Settings, Flame, LogOut, Shield, User } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getProgress, getStreakData, LevelProgress, StreakData } from '@/utils/progressUtils';
 import { SettingsComponent } from '@/components/SettingsComponent';
@@ -16,7 +16,7 @@ const Index = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { user, isAdmin, signOut, loading } = useAuth();
+  const { user, isAdmin, signOut } = useAuth();
   const { getProgress: getCloudProgress, getStreakData: getCloudStreak } = useCloudProgress();
 
   useEffect(() => {
@@ -113,11 +113,17 @@ const Index = () => {
         {/* Top Bar */}
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2">
-            {user ? (
+            {user && (
               <>
-                <span className="text-sm text-gray-600">
-                  {user.email}
-                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate('/profile')}
+                  className="gap-2"
+                >
+                  <User className="w-4 h-4" />
+                  Profile
+                </Button>
                 {isAdmin && (
                   <Button
                     variant="outline"
@@ -139,17 +145,6 @@ const Index = () => {
                   Sign Out
                 </Button>
               </>
-            ) : (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => navigate('/auth')}
-                className="gap-2"
-                disabled={loading}
-              >
-                <LogIn className="w-4 h-4" />
-                Log In
-              </Button>
             )}
           </div>
           <Button 
