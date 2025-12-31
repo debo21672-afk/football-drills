@@ -2,21 +2,62 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, Play, Settings, Flame } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Trophy, Star, Play, Settings, Flame, LogIn, LogOut, Shield } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getProgress, getStreakData, LevelProgress, StreakData } from '@/utils/progressUtils';
 import { SettingsComponent } from '@/components/SettingsComponent';
+import { useAuth } from '@/hooks/useAuth';
+import { useCloudProgress } from '@/hooks/useCloudProgress';
 
 const Index = () => {
   const [progress, setProgress] = useState<{ [levelId: number]: LevelProgress }>({});
   const [streakData, setStreakData] = useState<StreakData>({ currentStreak: 0, longestStreak: 0, lastSessionDate: null, totalSessions: 0 });
   const [showSettings, setShowSettings] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  
+  const { user, isAdmin, signOut, loading } = useAuth();
+  const { getProgress: getCloudProgress, getStreakData: getCloudStreak } = useCloudProgress();
 
   useEffect(() => {
-    setProgress(getProgress());
-    setStreakData(getStreakData());
-  }, []);
+    const loadProgress = async () => {
+      if (user) {
+        // Load from cloud
+        const cloudProgress = await getCloudProgress();
+        const cloudStreak = await getCloudStreak();
+        
+        const levelProgress: { [levelId: number]: LevelProgress } = {};
+        Object.entries(cloudProgress).forEach(([exerciseId, bestScore]) => {
+          const [levelIdStr] = exerciseId.split('-');
+          const levelId = parseInt(levelIdStr);
+          if (!levelProgress[levelId]) {
+            levelProgress[levelId] = {
+              levelId,
+              completedExercises: 0,
+              totalExercises: levelId % 2 === 0 ? 7 : 8,
+              bestScores: {},
+              attempts: {}
+            };
+          }
+          levelProgress[levelId].bestScores[exerciseId] = bestScore;
+          levelProgress[levelId].completedExercises = Object.keys(levelProgress[levelId].bestScores).length;
+        });
+        setProgress(levelProgress);
+        setStreakData({
+          currentStreak: cloudStreak.currentStreak,
+          longestStreak: cloudStreak.longestStreak,
+          lastSessionDate: null,
+          totalSessions: 0
+        });
+      } else {
+        // Load from localStorage
+        setProgress(getProgress());
+        setStreakData(getStreakData());
+      }
+    };
+    
+    loadProgress();
+  }, [user, getCloudProgress, getCloudStreak]);
 
   useEffect(() => {
     // Restore scroll position when coming back to index page
@@ -32,6 +73,12 @@ const Index = () => {
     // Save current scroll position before navigating
     sessionStorage.setItem('indexScrollPosition', window.scrollY.toString());
   }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    setProgress({});
+    setStreakData({ currentStreak: 0, longestStreak: 0, lastSessionDate: null, totalSessions: 0 });
+  };
 
   // Memoize levels array to avoid recreation on every render
   const levels = useMemo(() =>
@@ -63,8 +110,48 @@ const Index = () => {
       {showSettings && <SettingsComponent onClose={() => setShowSettings(false)} />}
 
       <div className="max-w-6xl mx-auto">
-        {/* Settings Button */}
-        <div className="flex justify-end mb-2">
+        {/* Top Bar */}
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-2">
+            {user ? (
+              <>
+                <span className="text-sm text-gray-600">
+                  {user.email}
+                </span>
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate('/admin')}
+                    className="gap-2"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Admin
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => navigate('/auth')}
+                className="gap-2"
+                disabled={loading}
+              >
+                <LogIn className="w-4 h-4" />
+                Log In
+              </Button>
+            )}
+          </div>
           <Button 
             variant="ghost" 
             size="icon" 
