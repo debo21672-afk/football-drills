@@ -15,7 +15,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Hardcoded admin email - update this to your email
-const ADMIN_EMAIL = 'admin@footballskills.com';
+const ADMIN_EMAIL = 'debo21672@gmail.com';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
