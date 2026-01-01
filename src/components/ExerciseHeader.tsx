@@ -15,7 +15,7 @@ export const ExerciseHeader = ({ levelId, exerciseName, exerciseDescription, bes
   return (
     <div className="flex items-center gap-4 mb-6">
       <Link to={`/level/${levelId}`}>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" aria-label="Back to level">
           <ArrowLeft className="w-4 h-4" />
         </Button>
       </Link>

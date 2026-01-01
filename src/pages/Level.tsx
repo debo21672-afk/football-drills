@@ -77,7 +77,7 @@ const Level = () => {
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Link to="/">
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" aria-label="Back to home">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>

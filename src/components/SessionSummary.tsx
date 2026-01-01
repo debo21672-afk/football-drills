@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Award, Target, TrendingUp, TrendingDown, Clock, BarChart3, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,55 @@ interface SessionSummaryProps {
 }
 
 export const SessionSummary = ({ exerciseId, currentScore, onClose, onRetry }: SessionSummaryProps) => {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
+  // Focus trap: keep focus within modal
+  useEffect(() => {
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !modalRef.current) return;
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        // Shift+Tab: if on first element, move to last
+        if (document.activeElement === firstElement) {
+          lastElement?.focus();
+          e.preventDefault();
+        }
+      } else {
+        // Tab: if on last element, move to first
+        if (document.activeElement === lastElement) {
+          firstElement?.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleTabKey);
+    return () => document.removeEventListener('keydown', handleTabKey);
+  }, []);
+
+  // Focus close button when modal opens
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
   const stats = getExerciseStats(exerciseId);
   const isNewBest = currentScore >= stats.bestScore && stats.attempts > 0;
   const percentageVsAverage = stats.averageScore > 0 
@@ -34,10 +84,10 @@ export const SessionSummary = ({ exerciseId, currentScore, onClose, onRetry }: S
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md bg-white shadow-2xl animate-in fade-in zoom-in duration-300">
+      <Card ref={modalRef} className="w-full max-w-md bg-white shadow-2xl animate-in fade-in zoom-in duration-300" role="dialog" aria-modal="true" aria-labelledby="summary-title">
         <CardHeader className="text-center pb-2">
           <div className="flex justify-end">
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button ref={closeButtonRef} variant="ghost" size="icon" onClick={onClose} aria-label="Close summary">
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -55,7 +105,7 @@ export const SessionSummary = ({ exerciseId, currentScore, onClose, onRetry }: S
             )}
           </div>
           
-          <CardTitle className="text-xl">
+          <CardTitle id="summary-title" className="text-xl">
             {isNewBest ? 'New Personal Best!' : 'Session Complete!'}
           </CardTitle>
         </CardHeader>

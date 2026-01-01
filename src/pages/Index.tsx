@@ -156,11 +156,12 @@ const Index = () => {
               </>
             )}
           </div>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setShowSettings(true)}
             className="hover:bg-white/50"
+            aria-label="Open settings"
           >
             <Settings className="w-5 h-5" />
           </Button>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Volume2, VolumeX, Moon, Sun, Clock, Gauge, Trash2, Download, Upload } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,55 @@ interface SettingsComponentProps {
 
 export const SettingsComponent = ({ onClose }: SettingsComponentProps) => {
   const [settings, setSettings] = useState<UserSettings>(getSettings());
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
+  // Focus trap: keep focus within modal
+  useEffect(() => {
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !modalRef.current) return;
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        // Shift+Tab: if on first element, move to last
+        if (document.activeElement === firstElement) {
+          lastElement?.focus();
+          e.preventDefault();
+        }
+      } else {
+        // Tab: if on last element, move to first
+        if (document.activeElement === lastElement) {
+          firstElement?.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleTabKey);
+    return () => document.removeEventListener('keydown', handleTabKey);
+  }, []);
+
+  // Focus close button when modal opens
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
 
   const handleSettingChange = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
     const newSettings = { ...settings, [key]: value };
@@ -106,11 +155,11 @@ export const SettingsComponent = ({ onClose }: SettingsComponentProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
+      <Card ref={modalRef} className="w-full max-w-md bg-white shadow-2xl max-h-[90vh] overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="settings-title">
         <CardHeader className="pb-3">
           <div className="flex justify-between items-center">
-            <CardTitle className="text-xl">Settings</CardTitle>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <CardTitle id="settings-title" className="text-xl">Settings</CardTitle>
+            <Button ref={closeButtonRef} variant="ghost" size="icon" onClick={onClose} aria-label="Close settings">
               <X className="w-5 h-5" />
             </Button>
           </div>

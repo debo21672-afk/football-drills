@@ -128,10 +128,10 @@ export const TimerComponent = ({ onComplete, onCancel, exerciseName, initialDura
               {exerciseName} - Timer
             </CardTitle>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={toggleSound} title={soundEnabled ? "Mute sounds" : "Enable sounds"}>
+              <Button variant="ghost" size="icon" onClick={toggleSound} aria-label={soundEnabled ? "Mute sounds" : "Enable sounds"}>
                 {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
               </Button>
-              <Button variant="outline" size="icon" onClick={onCancel}>
+              <Button variant="outline" size="icon" onClick={onCancel} aria-label="Cancel timer">
                 <X className="w-4 h-4" />
               </Button>
             </div>
