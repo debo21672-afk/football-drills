@@ -157,11 +157,28 @@ export const useCloudProgress = () => {
     return count || 0;
   }, [user]);
 
+  const getRecentSessions = useCallback(async (days: number = 30) => {
+    if (!user) return [];
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    const { data } = await supabase
+      .from('sessions')
+      .select('exercise_id, score, created_at')
+      .eq('user_id', user.id)
+      .gte('created_at', startDate.toISOString())
+      .order('created_at', { ascending: true });
+
+    return data || [];
+  }, [user]);
+
   return {
     saveScore,
     getBestScore,
     getProgress,
     getStreakData,
-    getTotalSessions
+    getTotalSessions,
+    getRecentSessions
   };
 };

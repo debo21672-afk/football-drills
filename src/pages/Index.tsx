@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, Play, Settings, Flame, LogOut, Shield, User } from "lucide-react";
+import { Trophy, Star, Play, Settings, Flame, LogOut, Shield, User, BarChart3 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getProgress, getStreakData, LevelProgress, StreakData } from '@/utils/progressUtils';
 import { SettingsComponent } from '@/components/SettingsComponent';
@@ -115,6 +115,15 @@ const Index = () => {
           <div className="flex items-center gap-2">
             {user && (
               <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate('/dashboard')}
+                  className="gap-2"
+                >
+                  <BarChart3 className="w-4 h-4" />
+                  Dashboard
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
