@@ -8,13 +8,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCloudProgress } from '@/hooks/useCloudProgress';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Loader2, Save, Trophy, Flame, Target, Calendar } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, Trophy, Flame, Target, Calendar, Download } from 'lucide-react';
 
 const Profile = () => {
   const [displayName, setDisplayName] = useState('');
   const [originalDisplayName, setOriginalDisplayName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [stats, setStats] = useState({
     totalExercises: 0,
     totalSessions: 0,
@@ -22,9 +23,9 @@ const Profile = () => {
     longestStreak: 0,
     memberSince: ''
   });
-  
+
   const { user } = useAuth();
-  const { getProgress, getStreakData, getTotalSessions } = useCloudProgress();
+  const { getProgress, getStreakData, getTotalSessions, exportAllData } = useCloudProgress();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -107,6 +108,51 @@ const Profile = () => {
       });
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    if (!user) return;
+
+    setIsExporting(true);
+    try {
+      const result = await exportAllData();
+
+      if (!result.success) {
+        toast({
+          title: 'Export failed',
+          description: result.error?.message || 'Failed to export your data. Please try again.',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // Create and download JSON file
+      const jsonString = JSON.stringify(result.data, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const fileName = `football-skills-data-${new Date().toISOString().split('T')[0]}.json`;
+
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: 'Data exported!',
+        description: `Your data has been downloaded as ${fileName}`
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Export failed',
+        description: error.message || 'An unexpected error occurred.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -210,6 +256,53 @@ const Profile = () => {
                 <span className="text-sm">Member since {stats.memberSince}</span>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Data Export Card */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-xl">Data Export</CardTitle>
+            <CardDescription>Download all your training data</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Export all your progress, sessions, and statistics as a JSON file.
+              This includes your exercise scores, session history, streak data, and profile information.
+            </p>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+              <p className="font-semibold mb-1">📊 What's included:</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>All exercise best scores and attempts</li>
+                <li>Complete session history</li>
+                <li>Streak data and statistics</li>
+                <li>Profile information</li>
+              </ul>
+            </div>
+
+            <Button
+              onClick={handleExportData}
+              disabled={isExporting}
+              className="w-full gap-2"
+              variant="outline"
+            >
+              {isExporting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  Export My Data
+                </>
+              )}
+            </Button>
+
+            <p className="text-xs text-muted-foreground text-center">
+              This is your right under GDPR and data protection laws
+            </p>
           </CardContent>
         </Card>
       </div>

@@ -230,12 +230,95 @@ export const useCloudProgress = () => {
     return data || [];
   }, [user]);
 
+  const exportAllData = useCallback(async (): Promise<{ success: boolean; data?: any; error?: Error }> => {
+    if (!user) {
+      return { success: false, error: new Error('User not authenticated') };
+    }
+
+    try {
+      // Fetch profile data
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        throw new Error(`Failed to fetch profile: ${profileError.message}`);
+      }
+
+      // Fetch all progress (no limit)
+      const { data: progress, error: progressError } = await supabase
+        .from('user_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('exercise_id', { ascending: true });
+
+      if (progressError) {
+        throw new Error(`Failed to fetch progress: ${progressError.message}`);
+      }
+
+      // Fetch all sessions (no limit for export)
+      const { data: sessions, error: sessionsError } = await supabase
+        .from('sessions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('completed_at', { ascending: false });
+
+      if (sessionsError) {
+        throw new Error(`Failed to fetch sessions: ${sessionsError.message}`);
+      }
+
+      // Fetch streak data
+      const { data: streaks, error: streaksError } = await supabase
+        .from('user_streaks')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (streaksError && streaksError.code !== 'PGRST116') {
+        // PGRST116 = no rows returned, which is ok
+        throw new Error(`Failed to fetch streaks: ${streaksError.message}`);
+      }
+
+      // Construct export data
+      const exportData = {
+        export_date: new Date().toISOString(),
+        export_version: '1.0',
+        user: {
+          email: profile.email,
+          display_name: profile.display_name,
+          created_at: profile.created_at
+        },
+        statistics: {
+          total_exercises_completed: progress?.length || 0,
+          total_sessions: sessions?.length || 0,
+          current_streak: streaks?.current_streak || 0,
+          longest_streak: streaks?.longest_streak || 0,
+          last_activity_date: streaks?.last_activity_date || null
+        },
+        progress: progress || [],
+        sessions: sessions || [],
+        streaks: streaks || null
+      };
+
+      return { success: true, data: exportData };
+    } catch (error) {
+      console.error('Error exporting data:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Unknown error occurred while exporting data')
+      };
+    }
+  }, [user]);
+
   return {
     saveScore,
     getBestScore,
     getProgress,
     getStreakData,
     getTotalSessions,
-    getRecentSessions
+    getRecentSessions,
+    exportAllData
   };
 };
