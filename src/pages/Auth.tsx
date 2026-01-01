@@ -29,7 +29,9 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; displayName?: string }>({});
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [signupEmail, setSignupEmail] = useState('');
+
   const { user, signIn, signUp, signInWithGoogle, resetPassword, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -140,10 +142,9 @@ const Auth = () => {
             });
           }
         } else {
-          toast({
-            title: 'Account created!',
-            description: 'Welcome to Football Skills Training!'
-          });
+          // Show email verification screen
+          setSignupEmail(email);
+          setShowEmailVerification(true);
         }
       }
     } finally {
@@ -155,6 +156,53 @@ const Auth = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
         <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  // Show email verification screen after signup
+  if (showEmailVerification) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="text-6xl mb-4">📧</div>
+            <CardTitle className="text-2xl">Verify Your Email</CardTitle>
+            <CardDescription>
+              We've sent a verification link to <strong>{signupEmail}</strong>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+              <p className="font-semibold mb-2">Next Steps:</p>
+              <ol className="list-decimal list-inside space-y-1">
+                <li>Check your email inbox (and spam folder)</li>
+                <li>Click the verification link in the email</li>
+                <li>Return here to log in</li>
+              </ol>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-900">
+              <p className="font-semibold mb-1">⚠️ Important</p>
+              <p>You must verify your email before you can log in. The verification link will expire in 24 hours.</p>
+            </div>
+
+            <Button
+              onClick={() => {
+                setShowEmailVerification(false);
+                setMode('login');
+                setEmail('');
+                setPassword('');
+                setDisplayName('');
+                setErrors({});
+              }}
+              className="w-full"
+              variant="outline"
+            >
+              Back to Login
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
