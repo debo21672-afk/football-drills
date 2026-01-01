@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,18 +8,30 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { OfflineBanner } from "@/components/OfflineBanner";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
-import Index from "./pages/Index";
-import Level from "./pages/Level";
-import Exercise from "./pages/Exercise";
-import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
-import ResetPassword from "./pages/ResetPassword";
-import Profile from "./pages/Profile";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+// Lazy load route components for better performance
+const Index = lazy(() => import("./pages/Index"));
+const Level = lazy(() => import("./pages/Level"));
+const Exercise = lazy(() => import("./pages/Exercise"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Admin = lazy(() => import("./pages/Admin"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 10, // 10 minutes (replaces cacheTime)
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => {
   const isOnline = useOnlineStatus();
@@ -32,17 +45,65 @@ const App = () => {
             <Sonner />
             <OfflineBanner isOnline={isOnline} />
             <BrowserRouter>
-              <Routes>
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-                <Route path="/level/:levelId" element={<ProtectedRoute><Level /></ProtectedRoute>} />
-                <Route path="/exercise/:exerciseId" element={<ProtectedRoute><Exercise /></ProtectedRoute>} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense fallback={<LoadingSpinner message="Loading..." />}>
+                <Routes>
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <Index />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Suspense fallback={<LoadingSpinner message="Loading dashboard..." />}>
+                          <Dashboard />
+                        </Suspense>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute>
+                        <Suspense fallback={<LoadingSpinner message="Loading admin panel..." />}>
+                          <Admin />
+                        </Suspense>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/level/:levelId"
+                    element={
+                      <ProtectedRoute>
+                        <Level />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/exercise/:exerciseId"
+                    element={
+                      <ProtectedRoute>
+                        <Exercise />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
