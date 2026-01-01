@@ -4,12 +4,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { useAuth } from '@/hooks/useAuth';
 import { useCloudProgress } from '@/hooks/useCloudProgress';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Loader2, Save, Trophy, Flame, Target, Calendar, Download } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, Trophy, Flame, Target, Calendar, Download, Trash2, AlertTriangle } from 'lucide-react';
 
 const MAX_DISPLAY_NAME_LENGTH = 50;
 const MIN_DISPLAY_NAME_LENGTH = 2;
@@ -29,6 +40,7 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [stats, setStats] = useState({
     totalExercises: 0,
     totalSessions: 0,
@@ -37,7 +49,7 @@ const Profile = () => {
     memberSince: ''
   });
 
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { getProgress, getStreakData, getTotalSessions, exportAllData } = useCloudProgress();
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
@@ -220,6 +232,48 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+
+    setIsDeleting(true);
+    try {
+      // Delete user data from database
+      // Note: The user's auth account will be deleted via Supabase auth
+      // RLS policies will handle cascade deletion of related data
+
+      // Delete the user account (Supabase Auth)
+      const { error: authError } = await supabase.auth.admin.deleteUser(user.id);
+
+      if (authError) {
+        // If admin delete fails, try regular user deletion
+        const { error: deleteError } = await supabase.rpc('delete_user_account');
+
+        if (deleteError) {
+          throw new Error(deleteError.message || 'Failed to delete account');
+        }
+      }
+
+      // Sign out and redirect
+      await signOut();
+
+      toast({
+        title: 'Account deleted',
+        description: 'Your account and all associated data have been permanently deleted.'
+      });
+
+      navigate('/auth', { replace: true });
+    } catch (error: any) {
+      console.error('Error deleting account:', error);
+      toast({
+        title: 'Deletion failed',
+        description: error.message || 'Failed to delete your account. Please contact support.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
@@ -382,6 +436,84 @@ const Profile = () => {
 
             <p className="text-xs text-muted-foreground text-center">
               This is your right under GDPR and data protection laws
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Delete Account Card */}
+        <Card className="mt-6 border-red-200">
+          <CardHeader>
+            <CardTitle className="text-xl text-red-600 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5" />
+              Danger Zone
+            </CardTitle>
+            <CardDescription>Permanently delete your account and data</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-900">
+              <p className="font-semibold mb-2">⚠️ Warning: This action cannot be undone</p>
+              <p className="mb-2">Deleting your account will:</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Permanently delete your profile information</li>
+                <li>Remove all your exercise progress and scores</li>
+                <li>Delete your session history and statistics</li>
+                <li>Erase your streak data</li>
+                <li>Remove all associated data from our servers</li>
+              </ul>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-900">
+              <p className="font-semibold mb-1">💡 Before you go:</p>
+              <p>Consider exporting your data above if you want to keep a copy of your progress.</p>
+            </div>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  className="w-full gap-2"
+                  size="lg"
+                  disabled={isDeleting || !isOnline}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete My Account
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription className="space-y-2">
+                    <p>This will permanently delete your account and remove all your data from our servers.</p>
+                    <p className="font-semibold text-red-600">This action cannot be undone.</p>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteAccount}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isDeleting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Deleting...
+                      </>
+                    ) : (
+                      'Yes, Delete My Account'
+                    )}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            {!isOnline && (
+              <p className="text-xs text-orange-600 text-center font-medium">
+                You're offline. Reconnect to delete your account.
+              </p>
+            )}
+
+            <p className="text-xs text-muted-foreground text-center">
+              This is your right under GDPR Article 17 (Right to Erasure)
             </p>
           </CardContent>
         </Card>
