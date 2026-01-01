@@ -5,102 +5,158 @@ import { useAuth } from './useAuth';
 export const useCloudProgress = () => {
   const { user } = useAuth();
 
-  const saveScore = useCallback(async (exerciseId: string, score: number) => {
-    if (!user) return;
+  const saveScore = useCallback(async (exerciseId: string, score: number): Promise<{ success: boolean; error?: Error }> => {
+    if (!user) {
+      return { success: false, error: new Error('User not authenticated') };
+    }
 
-    // Upsert progress (update if exists, insert if not)
-    const { data: existing } = await supabase
-      .from('user_progress')
-      .select('best_score, attempts')
-      .eq('user_id', user.id)
-      .eq('exercise_id', exerciseId)
-      .maybeSingle();
-
-    if (existing) {
-      // Update if new score is better
-      const newBestScore = Math.max(existing.best_score, score);
-      await supabase
+    try {
+      // Upsert progress (update if exists, insert if not)
+      const { data: existing, error: selectError } = await supabase
         .from('user_progress')
-        .update({ 
-          best_score: newBestScore,
-          attempts: existing.attempts + 1
-        })
+        .select('best_score, attempts')
         .eq('user_id', user.id)
-        .eq('exercise_id', exerciseId);
-    } else {
-      // Insert new record
-      await supabase
-        .from('user_progress')
+        .eq('exercise_id', exerciseId)
+        .maybeSingle();
+
+      if (selectError) {
+        throw new Error(`Failed to fetch existing progress: ${selectError.message}`);
+      }
+
+      if (existing) {
+        // Update if new score is better
+        const newBestScore = Math.max(existing.best_score, score);
+        const { error: updateError } = await supabase
+          .from('user_progress')
+          .update({
+            best_score: newBestScore,
+            attempts: existing.attempts + 1
+          })
+          .eq('user_id', user.id)
+          .eq('exercise_id', exerciseId);
+
+        if (updateError) {
+          throw new Error(`Failed to update progress: ${updateError.message}`);
+        }
+      } else {
+        // Insert new record
+        const { error: insertError } = await supabase
+          .from('user_progress')
+          .insert({
+            user_id: user.id,
+            exercise_id: exerciseId,
+            best_score: score,
+            attempts: 1
+          });
+
+        if (insertError) {
+          throw new Error(`Failed to save progress: ${insertError.message}`);
+        }
+      }
+
+      // Add session record
+      const { error: sessionError } = await supabase
+        .from('sessions')
         .insert({
           user_id: user.id,
           exercise_id: exerciseId,
-          best_score: score,
-          attempts: 1
+          score: score
         });
+
+      if (sessionError) {
+        throw new Error(`Failed to save session: ${sessionError.message}`);
+      }
+
+      // Update streak
+      const streakResult = await updateStreak();
+      if (!streakResult.success) {
+        // Don't fail the whole operation if streak update fails
+        console.warn('Streak update failed:', streakResult.error);
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error saving score:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Unknown error occurred while saving score')
+      };
     }
-
-    // Add session record
-    await supabase
-      .from('sessions')
-      .insert({
-        user_id: user.id,
-        exercise_id: exerciseId,
-        score: score
-      });
-
-    // Update streak
-    await updateStreak();
   }, [user]);
 
-  const updateStreak = useCallback(async () => {
-    if (!user) return;
+  const updateStreak = useCallback(async (): Promise<{ success: boolean; error?: Error }> => {
+    if (!user) {
+      return { success: false, error: new Error('User not authenticated') };
+    }
 
-    const today = new Date().toISOString().split('T')[0];
-    
-    const { data: streakData } = await supabase
-      .from('user_streaks')
-      .select('*')
-      .eq('user_id', user.id)
-      .maybeSingle();
+    try {
+      const today = new Date().toISOString().split('T')[0];
 
-    if (!streakData) {
-      // Create new streak record
-      await supabase
+      const { data: streakData, error: selectError } = await supabase
         .from('user_streaks')
-        .insert({
-          user_id: user.id,
-          current_streak: 1,
-          longest_streak: 1,
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (selectError) {
+        throw new Error(`Failed to fetch streak data: ${selectError.message}`);
+      }
+
+      if (!streakData) {
+        // Create new streak record
+        const { error: insertError } = await supabase
+          .from('user_streaks')
+          .insert({
+            user_id: user.id,
+            current_streak: 1,
+            longest_streak: 1,
+            last_activity_date: today
+          });
+
+        if (insertError) {
+          throw new Error(`Failed to create streak: ${insertError.message}`);
+        }
+        return { success: true };
+      }
+
+      const lastDate = streakData.last_activity_date;
+
+      if (lastDate === today) {
+        // Already recorded today
+        return { success: true };
+      }
+
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      let newStreak = 1;
+      if (lastDate === yesterdayStr) {
+        // Consecutive day
+        newStreak = streakData.current_streak + 1;
+      }
+
+      const { error: updateError } = await supabase
+        .from('user_streaks')
+        .update({
+          current_streak: newStreak,
+          longest_streak: Math.max(newStreak, streakData.longest_streak),
           last_activity_date: today
-        });
-      return;
+        })
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        throw new Error(`Failed to update streak: ${updateError.message}`);
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error updating streak:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Unknown error occurred while updating streak')
+      };
     }
-
-    const lastDate = streakData.last_activity_date;
-    
-    if (lastDate === today) {
-      // Already recorded today
-      return;
-    }
-
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-    let newStreak = 1;
-    if (lastDate === yesterdayStr) {
-      // Consecutive day
-      newStreak = streakData.current_streak + 1;
-    }
-
-    await supabase
-      .from('user_streaks')
-      .update({
-        current_streak: newStreak,
-        longest_streak: Math.max(newStreak, streakData.longest_streak),
-        last_activity_date: today
-      })
-      .eq('user_id', user.id);
   }, [user]);
 
   const getBestScore = useCallback(async (exerciseId: string): Promise<number | null> => {
@@ -168,7 +224,8 @@ export const useCloudProgress = () => {
       .select('exercise_id, score, created_at')
       .eq('user_id', user.id)
       .gte('created_at', startDate.toISOString())
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: true })
+      .limit(200); // Limit to 200 sessions to prevent performance issues
 
     return data || [];
   }, [user]);

@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
 
 const authSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -31,6 +32,7 @@ const Auth = () => {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [signupEmail, setSignupEmail] = useState('');
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
 
   const { user, signIn, signUp, signInWithGoogle, resetPassword, loading } = useAuth();
   const navigate = useNavigate();
@@ -152,6 +154,37 @@ const Auth = () => {
     }
   };
 
+  const handleResendVerificationEmail = async () => {
+    setIsResendingEmail(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: signupEmail,
+      });
+
+      if (error) {
+        toast({
+          title: 'Failed to Resend Email',
+          description: error.message,
+          variant: 'destructive'
+        });
+      } else {
+        toast({
+          title: 'Email Sent!',
+          description: 'Check your inbox for the verification link.'
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsResendingEmail(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
@@ -185,6 +218,18 @@ const Auth = () => {
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-900">
               <p className="font-semibold mb-1">⚠️ Important</p>
               <p>You must verify your email before you can log in. The verification link will expire in 24 hours.</p>
+            </div>
+
+            <div className="text-center text-sm text-muted-foreground">
+              Didn't receive the email?{' '}
+              <button
+                type="button"
+                onClick={handleResendVerificationEmail}
+                disabled={isResendingEmail}
+                className="text-primary hover:underline font-medium disabled:opacity-50"
+              >
+                {isResendingEmail ? 'Sending...' : 'Resend verification email'}
+              </button>
             </div>
 
             <Button

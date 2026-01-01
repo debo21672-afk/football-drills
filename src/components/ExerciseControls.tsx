@@ -4,20 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Timer, Save } from "lucide-react";
+import { Timer, Save, Loader2 } from "lucide-react";
 
 interface ExerciseControlsProps {
   onStartTimer: () => void;
-  onSaveManualScore: (score: number) => void;
+  onSaveManualScore: (score: number) => Promise<void>;
+  isSaving?: boolean;
 }
 
-export const ExerciseControls = ({ onStartTimer, onSaveManualScore }: ExerciseControlsProps) => {
+export const ExerciseControls = ({ onStartTimer, onSaveManualScore, isSaving = false }: ExerciseControlsProps) => {
   const [manualReps, setManualReps] = useState('');
 
-  const handleManualSave = () => {
+  const handleManualSave = async () => {
     const score = parseInt(manualReps);
     if (score > 0) {
-      onSaveManualScore(score);
+      await onSaveManualScore(score);
       setManualReps('');
     }
   };
@@ -68,13 +69,22 @@ export const ExerciseControls = ({ onStartTimer, onSaveManualScore }: ExerciseCo
                 min="0"
               />
             </div>
-            <Button 
+            <Button
               onClick={handleManualSave}
-              disabled={!manualReps || parseInt(manualReps) <= 0}
+              disabled={!manualReps || parseInt(manualReps) <= 0 || isSaving}
               className="w-full"
             >
-              <Save className="w-4 h-4 mr-2" />
-              Save Score
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Score
+                </>
+              )}
             </Button>
           </div>
         </CardContent>

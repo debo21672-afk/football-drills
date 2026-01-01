@@ -17,7 +17,8 @@ const Exercise = () => {
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [showSummary, setShowSummary] = useState(false);
   const [lastScore, setLastScore] = useState(0);
-  
+  const [isSaving, setIsSaving] = useState(false);
+
   const { user } = useAuth();
   const { saveScore: saveCloudScore, getBestScore } = useCloudProgress();
 
@@ -44,55 +45,69 @@ const Exercise = () => {
   const saveScore = async (score: number, duration: number = 60) => {
     if (!exerciseId) return;
 
-    const isNewBest = !bestScore || score > bestScore;
-    const wasFirstTime = !bestScore;
+    setIsSaving(true);
+    try {
+      const isNewBest = !bestScore || score > bestScore;
+      const wasFirstTime = !bestScore;
 
-    if (user) {
-      // Save to cloud
-      await saveCloudScore(exerciseId, score);
-    } else {
-      // Save to localStorage
-      const [levelId] = exerciseId.split('-');
-      const progress = getProgress();
-      
-      if (!progress[parseInt(levelId)]) {
-        progress[parseInt(levelId)] = {
-          levelId: parseInt(levelId),
-          completedExercises: 0,
-          totalExercises: 7,
-          bestScores: {},
-          attempts: {}
-        };
+      if (user) {
+        // Save to cloud
+        const result = await saveCloudScore(exerciseId, score);
+
+        if (!result.success) {
+          toast({
+            title: "❌ Failed to Save Score",
+            description: result.error?.message || "Check your connection and try again. Your score was not saved.",
+            variant: "destructive"
+          });
+          return; // Don't show summary if save failed
+        }
+      } else {
+        // Save to localStorage
+        const [levelId] = exerciseId.split('-');
+        const progress = getProgress();
+
+        if (!progress[parseInt(levelId)]) {
+          progress[parseInt(levelId)] = {
+            levelId: parseInt(levelId),
+            completedExercises: 0,
+            totalExercises: 7,
+            bestScores: {},
+            attempts: {}
+          };
+        }
+
+        progress[parseInt(levelId)].bestScores[exerciseId] = Math.max(score, bestScore || 0);
+        progress[parseInt(levelId)].completedExercises = Object.keys(progress[parseInt(levelId)].bestScores).length;
+        saveProgress(progress);
+        addSession(exerciseId, score, duration);
       }
 
-      progress[parseInt(levelId)].bestScores[exerciseId] = Math.max(score, bestScore || 0);
-      progress[parseInt(levelId)].completedExercises = Object.keys(progress[parseInt(levelId)].bestScores).length;
-      saveProgress(progress);
-      addSession(exerciseId, score, duration);
-    }
-    
-    setBestScore(Math.max(score, bestScore || 0));
+      setBestScore(Math.max(score, bestScore || 0));
 
-    if (wasFirstTime) {
-      toast({
-        title: "🏆 Exercise Completed!",
-        description: `You scored ${score} reps! Keep practicing to improve.`,
-      });
-    } else if (isNewBest) {
-      toast({
-        title: "🎉 New Personal Best!",
-        description: `Amazing! You beat your previous score with ${score} reps!`,
-      });
-    } else {
-      toast({
-        title: "Score Saved!",
-        description: `You scored ${score} reps. Your best is still ${bestScore}.`,
-      });
-    }
+      if (wasFirstTime) {
+        toast({
+          title: "🏆 Exercise Completed!",
+          description: `You scored ${score} reps! Keep practicing to improve.`,
+        });
+      } else if (isNewBest) {
+        toast({
+          title: "🎉 New Personal Best!",
+          description: `Amazing! You beat your previous score with ${score} reps!`,
+        });
+      } else {
+        toast({
+          title: "Score Saved!",
+          description: `You scored ${score} reps. Your best is still ${bestScore}.`,
+        });
+      }
 
-    // Show summary modal
-    setLastScore(score);
-    setShowSummary(true);
+      // Show summary modal
+      setLastScore(score);
+      setShowSummary(true);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleTimerComplete = (reps: number) => {
@@ -149,6 +164,7 @@ const Exercise = () => {
             <ExerciseControls
               onStartTimer={() => setIsTestMode(true)}
               onSaveManualScore={saveScore}
+              isSaving={isSaving}
             />
           )}
         </div>
