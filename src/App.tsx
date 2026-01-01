@@ -10,6 +10,9 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
+import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
+import { LevelSkeleton } from "@/components/skeletons/LevelSkeleton";
 
 // Lazy load route components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -70,7 +73,7 @@ const App = () => {
                     path="/dashboard"
                     element={
                       <ProtectedRoute>
-                        <Suspense fallback={<LoadingSpinner message="Loading dashboard..." />}>
+                        <Suspense fallback={<DashboardSkeleton />}>
                           <Dashboard />
                         </Suspense>
                       </ProtectedRoute>
@@ -80,7 +83,9 @@ const App = () => {
                     path="/profile"
                     element={
                       <ProtectedRoute>
-                        <Profile />
+                        <Suspense fallback={<ProfileSkeleton />}>
+                          <Profile />
+                        </Suspense>
                       </ProtectedRoute>
                     }
                   />
@@ -98,7 +103,9 @@ const App = () => {
                     path="/level/:levelId"
                     element={
                       <ProtectedRoute>
-                        <Level />
+                        <Suspense fallback={<LevelSkeleton />}>
+                          <Level />
+                        </Suspense>
                       </ProtectedRoute>
                     }
                   />

@@ -9,11 +9,18 @@ import { toast } from '@/hooks/use-toast';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
+import { validatePasswordStrength, PasswordStrength } from '@/utils/passwordValidation';
+import { PasswordStrengthIndicator } from '@/components/PasswordStrengthIndicator';
 
 const authSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
   displayName: z.string().max(50, 'Display name must be less than 50 characters').optional()
+});
+
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password is required'),
 });
 
 const emailSchema = z.object({
@@ -33,6 +40,7 @@ const Auth = () => {
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [signupEmail, setSignupEmail] = useState('');
   const [isResendingEmail, setIsResendingEmail] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
 
   const { user, signIn, signUp, signInWithGoogle, resetPassword, loading } = useAuth();
   const navigate = useNavigate();
@@ -47,8 +55,17 @@ const Auth = () => {
     try {
       if (mode === 'forgot') {
         emailSchema.parse({ email });
+      } else if (mode === 'login') {
+        loginSchema.parse({ email, password });
       } else {
+        // Signup mode - strict password requirements
         authSchema.parse({ email, password, displayName: displayName || undefined });
+
+        // Additional password strength check for signup
+        if (passwordStrength && !passwordStrength.meetsRequirements) {
+          setErrors({ password: 'Password does not meet security requirements' });
+          return false;
+        }
       }
       setErrors({});
       return true;
@@ -63,6 +80,19 @@ const Auth = () => {
         setErrors(fieldErrors);
       }
       return false;
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+
+    // Only validate strength in signup mode
+    if (mode === 'signup' && newPassword) {
+      const strength = validatePasswordStrength(newPassword);
+      setPasswordStrength(strength);
+    } else {
+      setPasswordStrength(null);
     }
   };
 
@@ -339,7 +369,7 @@ const Auth = () => {
                   type="password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   className={`h-12 ${errors.password ? 'border-red-500' : ''}`}
                   required
                   aria-invalid={!!errors.password}
@@ -347,6 +377,13 @@ const Auth = () => {
                 />
                 {errors.password && (
                   <p id="password-error" className="text-sm text-red-500" role="alert">{errors.password}</p>
+                )}
+
+                {/* Password strength indicator - only show in signup mode */}
+                {mode === 'signup' && password && passwordStrength && (
+                  <div className="mt-2">
+                    <PasswordStrengthIndicator strength={passwordStrength} showFeedback={true} />
+                  </div>
                 )}
               </div>
             )}
@@ -426,11 +463,12 @@ const Auth = () => {
                   onClick={() => {
                     setMode(mode === 'login' ? 'signup' : 'login');
                     setErrors({});
+                    setPasswordStrength(null);
                   }}
                   className="text-sm text-muted-foreground hover:text-primary underline"
                 >
-                  {mode === 'login' 
-                    ? "Don't have an account? Sign up" 
+                  {mode === 'login'
+                    ? "Don't have an account? Sign up"
                     : 'Already have an account? Log in'}
                 </button>
               </div>
