@@ -12,14 +12,51 @@ interface ExerciseControlsProps {
   isSaving?: boolean;
 }
 
+const MAX_REALISTIC_SCORE = 500;
+const MIN_SCORE = 1;
+
 export const ExerciseControls = ({ onStartTimer, onSaveManualScore, isSaving = false }: ExerciseControlsProps) => {
   const [manualReps, setManualReps] = useState('');
+  const [error, setError] = useState('');
+
+  const validateScore = (value: string): boolean => {
+    const numValue = Number(value);
+
+    if (!value || value === '0') {
+      setError('');
+      return false;
+    }
+
+    if (numValue < MIN_SCORE) {
+      setError('Score must be at least 1');
+      return false;
+    }
+
+    if (numValue > MAX_REALISTIC_SCORE) {
+      setError(`Score seems too high. Maximum is ${MAX_REALISTIC_SCORE}`);
+      return false;
+    }
+
+    setError('');
+    return true;
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/, ''); // Only numbers
+
+    // Limit to 3 digits (max 500)
+    if (value.length <= 3) {
+      setManualReps(value);
+      validateScore(value);
+    }
+  };
 
   const handleManualSave = async () => {
-    const score = parseInt(manualReps);
-    if (score > 0) {
+    if (validateScore(manualReps)) {
+      const score = parseInt(manualReps);
       await onSaveManualScore(score);
       setManualReps('');
+      setError('');
     }
   };
 
@@ -65,14 +102,24 @@ export const ExerciseControls = ({ onStartTimer, onSaveManualScore, isSaving = f
                 type="number"
                 placeholder="Enter reps..."
                 value={manualReps}
-                onChange={(e) => setManualReps(e.target.value)}
-                min="0"
+                onChange={handleInputChange}
+                min={MIN_SCORE}
+                max={MAX_REALISTIC_SCORE}
+                inputMode="numeric"
+                className={`h-12 text-base ${error ? 'border-red-500' : ''}`}
+                aria-invalid={!!error}
+                aria-describedby={error ? "reps-error" : undefined}
               />
+              {error && (
+                <p id="reps-error" className="text-red-600 text-xs mt-1" role="alert">
+                  {error}
+                </p>
+              )}
             </div>
             <Button
               onClick={handleManualSave}
-              disabled={!manualReps || parseInt(manualReps) <= 0 || isSaving}
-              className="w-full"
+              disabled={!manualReps || !!error || isSaving}
+              className="w-full h-12 text-base"
             >
               {isSaving ? (
                 <>

@@ -84,14 +84,18 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Trim and sanitize email
+    const trimmedEmail = email.trim().toLowerCase();
+    setEmail(trimmedEmail);
+
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
 
     try {
       if (mode === 'forgot') {
-        const { error } = await resetPassword(email);
+        const { error } = await resetPassword(trimmedEmail);
         if (error) {
           toast({
             title: 'Reset Failed',
@@ -106,7 +110,7 @@ const Auth = () => {
           setMode('login');
         }
       } else if (mode === 'login') {
-        const { error } = await signIn(email, password);
+        const { error } = await signIn(trimmedEmail, password);
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
             toast({
@@ -128,7 +132,7 @@ const Auth = () => {
           });
         }
       } else {
-        const { error } = await signUp(email, password, displayName);
+        const { error } = await signUp(trimmedEmail, password, displayName.trim());
         if (error) {
           if (error.message.includes('already registered')) {
             toast({
@@ -145,7 +149,7 @@ const Auth = () => {
           }
         } else {
           // Show email verification screen
-          setSignupEmail(email);
+          setSignupEmail(trimmedEmail);
           setShowEmailVerification(true);
         }
       }
@@ -299,13 +303,16 @@ const Auth = () => {
                   placeholder="Your name"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
+                  className={`h-12 ${errors.displayName ? 'border-red-500' : ''}`}
+                  aria-invalid={!!errors.displayName}
+                  aria-describedby={errors.displayName ? "displayname-error" : undefined}
                 />
                 {errors.displayName && (
-                  <p className="text-sm text-red-500">{errors.displayName}</p>
+                  <p id="displayname-error" className="text-sm text-red-500" role="alert">{errors.displayName}</p>
                 )}
               </div>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -314,13 +321,16 @@ const Auth = () => {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className={`h-12 ${errors.email ? 'border-red-500' : ''}`}
                 required
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? "email-error" : undefined}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
+                <p id="email-error" className="text-sm text-red-500" role="alert">{errors.email}</p>
               )}
             </div>
-            
+
             {mode !== 'forgot' && (
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -330,10 +340,13 @@ const Auth = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className={`h-12 ${errors.password ? 'border-red-500' : ''}`}
                   required
+                  aria-invalid={!!errors.password}
+                  aria-describedby={errors.password ? "password-error" : undefined}
                 />
                 {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password}</p>
+                  <p id="password-error" className="text-sm text-red-500" role="alert">{errors.password}</p>
                 )}
               </div>
             )}
@@ -353,7 +366,7 @@ const Auth = () => {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full h-12 text-base" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -376,9 +389,9 @@ const Auth = () => {
                 </div>
               </div>
 
-              <Button 
-                variant="outline" 
-                className="w-full gap-2" 
+              <Button
+                variant="outline"
+                className="w-full h-12 gap-2 text-base"
                 onClick={handleGoogleSignIn}
                 disabled={isGoogleLoading}
               >

@@ -11,9 +11,21 @@ import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, Loader2, Save, Trophy, Flame, Target, Calendar, Download } from 'lucide-react';
 
+const MAX_DISPLAY_NAME_LENGTH = 50;
+const MIN_DISPLAY_NAME_LENGTH = 2;
+
+// Sanitize display name to prevent XSS
+const sanitizeDisplayName = (name: string): string => {
+  return name
+    .replace(/[<>]/g, '') // Remove < and > to prevent HTML injection
+    .replace(/[^\w\s\-'.]/g, '') // Only allow alphanumeric, spaces, hyphens, apostrophes, and periods
+    .trim();
+};
+
 const Profile = () => {
   const [displayName, setDisplayName] = useState('');
   const [originalDisplayName, setOriginalDisplayName] = useState('');
+  const [displayNameError, setDisplayNameError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -29,6 +41,45 @@ const Profile = () => {
   const { getProgress, getStreakData, getTotalSessions, exportAllData } = useCloudProgress();
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
+
+  const validateDisplayName = (name: string): boolean => {
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      setDisplayNameError('Display name cannot be empty');
+      return false;
+    }
+
+    if (trimmedName.length < MIN_DISPLAY_NAME_LENGTH) {
+      setDisplayNameError(`Display name must be at least ${MIN_DISPLAY_NAME_LENGTH} characters`);
+      return false;
+    }
+
+    if (trimmedName.length > MAX_DISPLAY_NAME_LENGTH) {
+      setDisplayNameError(`Display name must be ${MAX_DISPLAY_NAME_LENGTH} characters or less`);
+      return false;
+    }
+
+    // Check for invalid characters
+    if (!/^[\w\s\-'.]+$/.test(trimmedName)) {
+      setDisplayNameError('Display name can only contain letters, numbers, spaces, hyphens, apostrophes, and periods');
+      return false;
+    }
+
+    setDisplayNameError('');
+    return true;
+  };
+
+  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const sanitized = sanitizeDisplayName(e.target.value);
+    setDisplayName(sanitized);
+
+    if (sanitized) {
+      validateDisplayName(sanitized);
+    } else {
+      setDisplayNameError('');
+    }
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -80,24 +131,35 @@ const Profile = () => {
 
   const handleSave = async () => {
     if (!user) return;
-    if (displayName === originalDisplayName) {
+
+    const trimmedName = displayName.trim();
+
+    if (!validateDisplayName(trimmedName)) {
+      return;
+    }
+
+    if (trimmedName === originalDisplayName) {
       toast({
         title: 'No changes',
         description: 'Display name is the same.'
       });
       return;
     }
-    
+
     setIsSaving(true);
     try {
+      const sanitizedName = sanitizeDisplayName(trimmedName);
+
       const { error } = await supabase
         .from('profiles')
-        .update({ display_name: displayName.trim() })
+        .update({ display_name: sanitizedName })
         .eq('id', user.id);
-      
+
       if (error) throw error;
-      
-      setOriginalDisplayName(displayName.trim());
+
+      setDisplayName(sanitizedName);
+      setOriginalDisplayName(sanitizedName);
+      setDisplayNameError('');
       toast({
         title: 'Profile updated!',
         description: 'Your display name has been saved.'
@@ -193,19 +255,29 @@ const Profile = () => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="displayName">Display Name</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="displayName"
-                  type="text"
-                  placeholder="Enter your display name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  maxLength={50}
-                />
-                <Button 
-                  onClick={handleSave} 
-                  disabled={isSaving || displayName === originalDisplayName}
-                  className="gap-2"
+              <div className="flex gap-2 flex-col sm:flex-row">
+                <div className="flex-1">
+                  <Input
+                    id="displayName"
+                    type="text"
+                    placeholder="Enter your display name"
+                    value={displayName}
+                    onChange={handleDisplayNameChange}
+                    maxLength={MAX_DISPLAY_NAME_LENGTH}
+                    className={`h-12 ${displayNameError ? 'border-red-500' : ''}`}
+                    aria-invalid={!!displayNameError}
+                    aria-describedby={displayNameError ? "displayname-error" : undefined}
+                  />
+                  {displayNameError && (
+                    <p id="displayname-error" className="text-red-600 text-xs mt-1" role="alert">
+                      {displayNameError}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  onClick={handleSave}
+                  disabled={isSaving || displayName === originalDisplayName || !!displayNameError}
+                  className="gap-2 h-12 sm:w-auto w-full"
                 >
                   {isSaving ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
