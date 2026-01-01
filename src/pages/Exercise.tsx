@@ -10,6 +10,7 @@ import { exerciseVideoMap, allExercises } from '@/data/exercises';
 import { getProgress, saveProgress, addSession } from '@/utils/progressUtils';
 import { useAuth } from '@/hooks/useAuth';
 import { useCloudProgress } from '@/hooks/useCloudProgress';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 
 const Exercise = () => {
   const { exerciseId } = useParams();
@@ -21,6 +22,7 @@ const Exercise = () => {
 
   const { user } = useAuth();
   const { saveScore: saveCloudScore, getBestScore } = useCloudProgress();
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     const loadBestScore = async () => {
@@ -44,6 +46,16 @@ const Exercise = () => {
 
   const saveScore = async (score: number, duration: number = 60) => {
     if (!exerciseId) return;
+
+    // Check if offline and trying to save to cloud
+    if (user && !isOnline) {
+      toast({
+        title: "📡 You're offline",
+        description: "Your score cannot be saved to the cloud. Please reconnect to save your progress.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     setIsSaving(true);
     try {

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { useCloudProgress } from '@/hooks/useCloudProgress';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, Loader2, Save, Trophy, Flame, Target, Calendar, Download } from 'lucide-react';
@@ -26,6 +27,7 @@ const Profile = () => {
 
   const { user } = useAuth();
   const { getProgress, getStreakData, getTotalSessions, exportAllData } = useCloudProgress();
+  const isOnline = useOnlineStatus();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -283,7 +285,7 @@ const Profile = () => {
 
             <Button
               onClick={handleExportData}
-              disabled={isExporting}
+              disabled={isExporting || !isOnline}
               className="w-full gap-2"
               variant="outline"
             >
@@ -299,6 +301,12 @@ const Profile = () => {
                 </>
               )}
             </Button>
+
+            {!isOnline && (
+              <p className="text-xs text-orange-600 text-center font-medium">
+                You're offline. Reconnect to export your data.
+              </p>
+            )}
 
             <p className="text-xs text-muted-foreground text-center">
               This is your right under GDPR and data protection laws
