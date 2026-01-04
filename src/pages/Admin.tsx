@@ -5,8 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Users, Trophy, Flame, TrendingUp, Loader2 } from 'lucide-react';
+import { ArrowLeft, Users, Trophy, Flame, TrendingUp, Loader2, Clock } from 'lucide-react';
 import { allExercises } from '@/data/exercises';
+
+interface DailyUsage {
+  usage_date: string;
+  total_seconds: number;
+  session_count: number;
+}
 
 interface UserData {
   id: string;
@@ -27,6 +33,7 @@ const Admin = () => {
   const [loadingData, setLoadingData] = useState(true);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [userProgress, setUserProgress] = useState<Record<string, number>>({});
+  const [userDailyUsage, setUserDailyUsage] = useState<DailyUsage[]>([]);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -94,6 +101,7 @@ const Admin = () => {
   };
 
   const fetchUserProgress = async (userId: string) => {
+    // Fetch progress
     const { data, error } = await supabase
       .from('user_progress')
       .select('exercise_id, best_score, attempts')
@@ -109,7 +117,30 @@ const Admin = () => {
       progressMap[p.exercise_id] = p.best_score;
     });
     setUserProgress(progressMap);
+
+    // Fetch daily usage (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const { data: usageData } = await supabase
+      .from('user_daily_usage')
+      .select('usage_date, total_seconds, session_count')
+      .eq('user_id', userId)
+      .gte('usage_date', thirtyDaysAgo.toISOString().split('T')[0])
+      .order('usage_date', { ascending: false });
+
+    setUserDailyUsage(usageData || []);
     setSelectedUser(userId);
+  };
+
+  const formatDuration = (seconds: number): string => {
+    if (seconds < 60) return `${seconds}s`;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins < 60) return `${mins}m ${secs}s`;
+    const hours = Math.floor(mins / 60);
+    const remainingMins = mins % 60;
+    return `${hours}h ${remainingMins}m`;
   };
 
   if (loading || loadingData) {
@@ -291,9 +322,36 @@ const Admin = () => {
                     </div>
                   </div>
 
+                  {/* Daily Usage */}
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    Daily Usage (Last 30 Days)
+                  </h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto mb-6">
+                    {userDailyUsage.length === 0 ? (
+                      <p className="text-gray-500 text-sm">No usage data recorded yet</p>
+                    ) : (
+                      userDailyUsage.map((usage) => (
+                        <div key={usage.usage_date} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                          <span className="text-sm">
+                            {new Date(usage.usage_date).toLocaleDateString('en-US', { 
+                              weekday: 'short', 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </span>
+                          <div className="flex gap-2">
+                            <Badge variant="outline">{usage.session_count} sessions</Badge>
+                            <Badge variant="secondary">{formatDuration(usage.total_seconds)}</Badge>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
                   {/* Exercise Scores */}
                   <h4 className="font-semibold mb-3">Exercise Best Scores</h4>
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
                     {Object.entries(userProgress).length === 0 ? (
                       <p className="text-gray-500 text-sm">No exercises completed yet</p>
                     ) : (

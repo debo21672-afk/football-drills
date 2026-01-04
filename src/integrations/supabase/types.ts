@@ -62,6 +62,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_daily_usage: {
+        Row: {
+          created_at: string
+          id: string
+          session_count: number
+          total_seconds: number
+          updated_at: string
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          session_count?: number
+          total_seconds?: number
+          updated_at?: string
+          usage_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          session_count?: number
+          total_seconds?: number
+          updated_at?: string
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           attempts: number
