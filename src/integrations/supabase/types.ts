@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      notification_log: {
+        Row: {
+          id: string
+          metadata: Json | null
+          notification_type: string
+          recipient_email: string
+          sent_at: string
+          subject: string
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          notification_type: string
+          recipient_email: string
+          sent_at?: string
+          subject: string
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          notification_type?: string
+          recipient_email?: string
+          sent_at?: string
+          subject?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      notification_settings: {
+        Row: {
+          created_at: string
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          setting_key: string
+          setting_value: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
