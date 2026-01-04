@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useUsageTracking } from '@/hooks/useUsageTracking';
 import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -9,6 +10,9 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
+  
+  // Track usage for authenticated users
+  useUsageTracking();
 
   if (loading) {
     return (
