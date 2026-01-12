@@ -101,7 +101,7 @@ export const allExercises: { [key: string]: { name: string; description: string 
   '3-5': { name: 'L Drag Pivot', description: 'Perform an L Drag, pivoting on your standing leg to repeat the move continuously' },
   '3-6': { name: 'L Drag L Drag', description: 'Perform the L Drag then switch feet to repay the move on the opposite side' },
   '3-7': { name: 'Elastico Elastico', description: 'Push the ball with the outside of the foot, then move foot around the ball to push back with the inside' },
-  '4-1': { name: 'L Drag Sole Roll', description: 'Perform an L Drag followed by a Sole Roll across the body to repeat the move' },
+  '4-1': { name: 'Triple Push Pull', description: 'Push the ball forward with the toe and pull back with the sole three times, alternating feet' },
   '4-2': { name: 'Inside Touch Stepover Outside Touch', description: 'Touch the ball with the inside of the foot, step over the ball, take an outside foot touch then repeat' },
   '4-3': { name: 'Sole Laces', description: 'Using the sole, drag the ball backwards and catch the ball with your laces to push forwards' },
   '4-4': { name: 'Reverse L Drag L Drag', description: 'Roll the ball behind standing leg and push forwards with the same foot, then L Drag to repeat' },
