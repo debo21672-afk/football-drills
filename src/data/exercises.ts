@@ -102,7 +102,7 @@ export const allExercises: { [key: string]: { name: string; description: string 
   '3-6': { name: 'L Drag L Drag', description: 'Perform the L Drag then switch feet to repay the move on the opposite side' },
   '3-7': { name: 'Elastico Elastico', description: 'Push the ball with the outside of the foot, then move foot around the ball to push back with the inside' },
   '4-1': { name: 'Triple Push Pull', description: 'Push the ball forward with the toe and pull back with the sole three times, alternating feet' },
-  '4-2': { name: 'L-Drag Sole Roll', description: 'Perform an L Drag followed by a Sole Roll across the body to repeat the move' },
+  '4-2': { name: 'Double V Cut Sole Roll', description: 'Perform two V cuts followed by a sole roll across the body to repeat the move' },
   '4-3': { name: 'Inside Outside Sole Roll', description: 'Touch the ball with inside then outside of the foot, followed by a sole roll across the body' },
   '4-4': { name: 'V-Pull Side to Side', description: 'Pull the ball back with the sole in a V shape, alternating side to side' },
   '4-5': { name: 'Triangles', description: 'Move the ball in a triangle pattern using the inside and sole of both feet' },
