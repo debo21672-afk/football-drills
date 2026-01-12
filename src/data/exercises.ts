@@ -106,7 +106,7 @@ export const allExercises: { [key: string]: { name: string; description: string 
   '4-3': { name: 'Pyramids', description: 'Move the ball between the cones in a pyramid pattern using quick inside touches, keeping the ball close' },
   '4-4': { name: 'Right Foot Weave', description: 'Weave the ball through the cones using only your right foot, alternating inside and outside touches with quick, controlled steps' },
   '4-5': { name: 'Left Foot Weave', description: 'Weave the ball through the cones using only your left foot, alternating inside and outside touches with quick, controlled steps' },
-  '4-6': { name: 'Sole Roll Tap', description: 'Roll the ball with the sole across your body and tap with the inside of the opposite foot' },
+  '4-6': { name: 'Inside Outside (same foot)', description: 'Weave around the cones using the inside and outside of the same foot, keeping the ball close with quick touches' },
   '4-7': { name: 'Push Pull Inside Outside', description: 'Push the ball forward, pull back with the sole, then touch inside and outside to repeat' },
   '5-1': { name: 'Outside Cuts', description: 'Using the outside of your foot, cut sharply alternating feet each time' },
   '5-2': { name: 'The Cruyff', description: 'Using the inside of the foot, hook the ball behind the opposite leg and repeat both sides' },
