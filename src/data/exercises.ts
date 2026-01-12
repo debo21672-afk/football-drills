@@ -104,7 +104,7 @@ export const allExercises: { [key: string]: { name: string; description: string 
   '4-1': { name: 'Triple Push Pull', description: 'Push the ball forward with the toe and pull back with the sole three times, alternating feet' },
   '4-2': { name: 'Double V Cut Sole Roll', description: 'Perform two V cuts followed by a sole roll across the body to repeat the move' },
   '4-3': { name: 'Pyramids', description: 'Move the ball between the cones in a pyramid pattern using quick inside touches, keeping the ball close' },
-  '4-4': { name: 'V-Pull Side to Side', description: 'Pull the ball back with the sole in a V shape, alternating side to side' },
+  '4-4': { name: 'Right Foot Weave', description: 'Weave the ball through the cones using only your right foot, alternating inside and outside touches with quick, controlled steps' },
   '4-5': { name: 'Triangles', description: 'Move the ball in a triangle pattern using the inside and sole of both feet' },
   '4-6': { name: 'Sole Roll Tap', description: 'Roll the ball with the sole across your body and tap with the inside of the opposite foot' },
   '4-7': { name: 'Push Pull Inside Outside', description: 'Push the ball forward, pull back with the sole, then touch inside and outside to repeat' },
